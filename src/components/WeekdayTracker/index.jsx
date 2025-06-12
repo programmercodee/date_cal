@@ -198,13 +198,6 @@ const getHinduCalendarInfo = (date) => {
   const hinduMonth = hinduMonths[hinduMonthIndex];
 
   // Special days and festivals (simplified list)
-  const specialDays = {
-    '1-1': 'नव वर्ष',
-    '15-8': 'स्वतंत्रता दिवस',
-    '26-1': 'गणतंत्र दिवस',
-    '2-10': 'गांधी जयंती',
-    // Add more special days as needed
-  };
 
   const dateKey = `${day}-${month + 1}`;
   const specialDay = specialDays[dateKey];
@@ -239,13 +232,20 @@ const getDayInfo = (date) => {
     '25-12': '🎄 Christmas',
 
     // Day of week specific info
-    '0': '🌅 Sunday - Relaxation Day',
-    '1': '💼 Monday - Fresh Start',
-    '2': '🚀 Tuesday - Momentum Day',
-    '3': '📊 Wednesday - Midweek',
-    '4': '🎯 Thursday - Almost Weekend',
-    '5': '🎉 Friday - Weekend Near',
-    '6': '🌟 Saturday - Weekend'
+    // '0': '🌅 Sunday - Relaxation Day',
+    // '1': '💼 Monday - Fresh Start',
+    // '2': '🚀 Tuesday - Momentum Day',
+    // '3': '📊 Wednesday - Midweek',
+    // '4': '🎯 Thursday - Almost Weekend',
+    // '5': '🎉 Friday - Weekend Near',
+    // '6': '🌟 Saturday - Weekend'
+    '0': '☕ Sun - Chill bhai, sofa + chai!',
+    '1': '😵 Mon - Uth ja Brijesh!',
+    '2': '🏃 Tue - Thoda tez chal!',
+    '3': '😓 Wed - Beech ka bojh!',
+    '4': '👀 Thu - Weekend nazdeek h!',
+    '5': '🍻 Fri - Kaam khatam, vibe on!',
+    '6': '😎 Sat - Full to masti!'
   };
 
   // Check for special day
