@@ -137,6 +137,7 @@ export default function WeekdayTracker() {
   const [weekdaysTillToday, setWeekdaysTillToday] = useState(0);
   const [remainingWeekdays, setRemainingWeekdays] = useState(0);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [selectedMonth, setSelectedMonth] = useState(new Date()); // Add this state
   const [isVisible, setIsVisible] = useState(false);
   const [timeToNextSaturday, setTimeToNextSaturday] = useState({
     days: 0,
@@ -443,14 +444,30 @@ export default function WeekdayTracker() {
     return { text: `${format(date, "MMM d")} (${daysUntil}d)`, color: "bg-slate-100 text-slate-600" };
   };
 
-  // Calculate dates for the month
+  // Add function to generate month options
+  const getMonthOptions = () => {
+    const options = [];
+    const currentDate = new Date();
+
+    // Generate options for current month and next 12 months
+    for (let i = 0; i < 13; i++) {
+      const date = new Date(currentDate.getFullYear(), currentDate.getMonth() + i, 1);
+      options.push({
+        value: date,
+        label: format(date, "MMMM yyyy")
+      });
+    }
+    return options;
+  };
+
+  // Update the useEffect for calculating dates to use selectedMonth
   useEffect(() => {
-    const today = new Date();
-    const startOfMonth = new Date(getYear(today), getMonth(today), 1);
-    const endOfMonth = new Date(getYear(today), getMonth(today) + 1, 0);
+    const startOfMonth = new Date(getYear(selectedMonth), getMonth(selectedMonth), 1);
+    const endOfMonth = new Date(getYear(selectedMonth), getMonth(selectedMonth) + 1, 0);
 
     const allDays = eachDayOfInterval({ start: startOfMonth, end: endOfMonth });
     const weekdays = allDays.filter((day) => !isWeekend(day));
+    const today = new Date();
     const passedWeekdays = weekdays.filter((day) => day <= today);
 
     // Calculate remaining weekends with proper date comparison
@@ -470,7 +487,7 @@ export default function WeekdayTracker() {
       saturdays: remainingSaturdays,
       sundays: remainingSundays
     });
-  }, [currentTime]);
+  }, [selectedMonth, currentTime]); // Add selectedMonth to dependencies
 
   // Update time and countdown every second
   useEffect(() => {
@@ -1073,9 +1090,30 @@ export default function WeekdayTracker() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       <div className="flex items-center gap-3">
                         <span className="text-2xl sm:text-3xl bg-gradient-to-br from-blue-500 to-purple-500 p-2 rounded-lg shadow-sm">📆</span>
-                        <h2 className="text-lg sm:text-xl font-bold text-slate-800">
-                          Monthly Calendar View
-                        </h2>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                          <h2 className="text-lg sm:text-xl font-bold text-slate-800">
+                            Monthly Calendar View
+                          </h2>
+                          {/* Add Month Selector Dropdown */}
+                          <div className="relative">
+                            <select
+                              value={selectedMonth.toISOString()}
+                              onChange={(e) => setSelectedMonth(new Date(e.target.value))}
+                              className="appearance-none bg-white border border-slate-200 rounded-lg px-4 py-2 pr-8 text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer hover:border-blue-300 transition-colors"
+                            >
+                              {getMonthOptions().map((option) => (
+                                <option key={option.value.toISOString()} value={option.value.toISOString()}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                            <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                              <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
                       </div>
 
                       {/* Scrollable Labels Container */}
@@ -1113,6 +1151,7 @@ export default function WeekdayTracker() {
                         const isWeekendDay = isSaturday(day) || isSunday(day);
                         const isCurrentDay = isToday(day);
                         const isPastDay = isAfter(startOfToday(), day);
+                        const isSelectedMonth = getMonth(day) === getMonth(selectedMonth);
                         const daysUntil = getDaysUntilLabel(day);
                         const timeUntil = getTimeUntil(day);
                         const sectionCountdown = getSectionCountdown(day);
@@ -1122,6 +1161,7 @@ export default function WeekdayTracker() {
                             key={idx}
                             className={`
                               p-3 rounded-lg relative group
+                              ${!isSelectedMonth ? 'opacity-50' : ''}
                               ${isWeekendDay
                                 ? isPastDay
                                   ? 'bg-red-100/50'
