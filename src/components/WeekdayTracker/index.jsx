@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { eachDayOfInterval, isWeekend, format, getMonth, getYear, isToday, isSaturday, isSunday, addDays, differenceInSeconds, differenceInDays, differenceInHours, differenceInMinutes, startOfDay, isAfter, isSameDay, startOfToday } from "date-fns";
+import HijriDate from 'hijri-date';
 
 // Add AnimatedBackground component
 const AnimatedBackground = () => {
@@ -128,6 +129,133 @@ const AnimatedClock = ({ size = 16 }) => {
       />
     </svg>
   );
+};
+
+// Add Indian calendar helper function
+const getIndianCalendarInfo = (date) => {
+  const hijriDate = new HijriDate(date);
+  const monthNames = [
+    'Chaitra', 'Vaishakha', 'Jyeshtha', 'Ashadha',
+    'Shravana', 'Bhadrapada', 'Ashwin', 'Kartika',
+    'Margashirsha', 'Pausha', 'Magha', 'Phalguna'
+  ];
+
+  // Get Indian month and day
+  const indianMonth = monthNames[hijriDate.getMonth()];
+  const indianDay = hijriDate.getDate();
+
+  // Get day of week in Hindi
+  const hindiDays = {
+    0: 'रविवार',
+    1: 'सोमवार',
+    2: 'मंगलवार',
+    3: 'बुधवार',
+    4: 'गुरुवार',
+    5: 'शुक्रवार',
+    6: 'शनिवार'
+  };
+
+  const hindiDay = hindiDays[date.getDay()];
+
+  return {
+    indianDate: `${indianDay} ${indianMonth}`,
+    hindiDay: hindiDay
+  };
+};
+
+// Add Hindu calendar helper function
+const getHinduCalendarInfo = (date) => {
+  // Hindu month names
+  const hinduMonths = [
+    'चैत्र', 'वैशाख', 'ज्येष्ठ', 'आषाढ़',
+    'श्रावण', 'भाद्रपद', 'आश्विन', 'कार्तिक',
+    'मार्गशीर्ष', 'पौष', 'माघ', 'फाल्गुन'
+  ];
+
+  // Hindu day names
+  const hinduDays = {
+    0: 'रविवार',
+    1: 'सोमवार',
+    2: 'मंगलवार',
+    3: 'बुधवार',
+    4: 'गुरुवार',
+    5: 'शुक्रवार',
+    6: 'शनिवार'
+  };
+
+  // Get the day of week in Hindi
+  const hindiDay = hinduDays[date.getDay()];
+
+  // Calculate approximate Hindu date (this is a simplified version)
+  // Note: This is an approximation and may not be 100% accurate
+  const day = date.getDate();
+  const month = date.getMonth();
+  const year = date.getFullYear();
+
+  // Approximate Hindu month based on Gregorian month
+  // This is a simplified mapping and may need adjustment
+  const hinduMonthIndex = (month + 2) % 12; // Approximate offset
+  const hinduMonth = hinduMonths[hinduMonthIndex];
+
+  // Special days and festivals (simplified list)
+  const specialDays = {
+    '1-1': 'नव वर्ष',
+    '15-8': 'स्वतंत्रता दिवस',
+    '26-1': 'गणतंत्र दिवस',
+    '2-10': 'गांधी जयंती',
+    // Add more special days as needed
+  };
+
+  const dateKey = `${day}-${month + 1}`;
+  const specialDay = specialDays[dateKey];
+
+  return {
+    hinduDate: `${day} ${hinduMonth}`,
+    hindiDay: hindiDay,
+    specialDay: specialDay
+  };
+};
+
+// Add helper function for day info
+const getDayInfo = (date) => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const dayOfWeek = date.getDay();
+
+  // Interesting facts and events for each day
+  const dayInfo = {
+    // Special days
+    '1-1': '🎉 New Year\'s Day',
+    '14-2': '❤️ Valentine\'s Day',
+    '8-3': '👩 Women\'s Day',
+    '1-4': '😄 April Fools\' Day',
+    '22-4': '🌍 Earth Day',
+    '1-5': '👷 Labour Day',
+    '5-6': '🌍 Environment Day',
+    '21-6': '☀️ Summer Solstice',
+    '15-8': '🇮🇳 Independence Day',
+    '2-10': '🕊️ Gandhi Jayanti',
+    '31-10': '🎃 Halloween',
+    '25-12': '🎄 Christmas',
+
+    // Day of week specific info
+    '0': '🌅 Sunday - Relaxation Day',
+    '1': '💼 Monday - Fresh Start',
+    '2': '🚀 Tuesday - Momentum Day',
+    '3': '📊 Wednesday - Midweek',
+    '4': '🎯 Thursday - Almost Weekend',
+    '5': '🎉 Friday - Weekend Near',
+    '6': '🌟 Saturday - Weekend'
+  };
+
+  // Check for special day
+  const dateKey = `${day}-${month}`;
+  if (dayInfo[dateKey]) {
+    return dayInfo[dateKey];
+  }
+
+  // Return day of week info if no special day
+  return dayInfo[dayOfWeek];
 };
 
 export default function WeekdayTracker() {
@@ -1160,20 +1288,19 @@ export default function WeekdayTracker() {
                           <div
                             key={idx}
                             className={`
-                              p-3 rounded-lg relative group
+                              p-3 rounded-lg relative
                               ${!isSelectedMonth ? 'opacity-50' : ''}
                               ${isWeekendDay
                                 ? isPastDay
-                                  ? 'bg-red-100/50 ring-2 ring-red-200'
-                                  : 'bg-red-50 hover:bg-red-100/50 ring-2 ring-red-100'
+                                  ? 'bg-red-100/50'
+                                  : 'bg-red-50 hover:bg-red-100/50'
                                 : isPastDay
-                                  ? 'bg-slate-100/50 ring-2 ring-slate-200'
-                                  : 'bg-slate-50 hover:bg-slate-100/50 ring-2 ring-slate-100'
+                                  ? 'bg-slate-100/50'
+                                  : 'bg-slate-50 hover:bg-slate-100/50'
                               }
-                              ${isCurrentDay ? 'ring-2 ring-blue-500 bg-blue-50' : ''}
+                              ${isCurrentDay ? 'border-2 border-blue-500 bg-blue-50' : 'border border-transparent'}
                               ${isPastDay ? 'opacity-75' : ''}
                               transition-all duration-200
-                              hover:ring-opacity-100
                             `}
                           >
                             <div className="flex items-center justify-between">
@@ -1191,6 +1318,16 @@ export default function WeekdayTracker() {
                                   ${isPastDay ? 'text-slate-400' : 'text-slate-500'}
                                 `}>
                                   {format(day, "MMM d")}
+                                </div>
+
+                                {/* Add Day Info */}
+                                <div className="mt-2 pt-2 border-t border-slate-100">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-xs text-emerald-600">💡</span>
+                                    <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                                      {getDayInfo(day)}
+                                    </span>
+                                  </div>
                                 </div>
 
                                 {/* Countdown Section */}
