@@ -998,7 +998,7 @@ export default function WeekdayTracker() {
 
               <div className="flex items-center gap-4 text-slate-400">
                 <a
-                  href="https://github.com/yourusername"
+                  href="https://github.com/programmercodee"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-blue-400 transition-colors"
@@ -1008,7 +1008,7 @@ export default function WeekdayTracker() {
                   </svg>
                 </a>
                 <a
-                  href="https://linkedin.com/in/yourusername"
+                  href="https://www.linkedin.com/in/brijesh-vishwakarma-813128276?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-blue-400 transition-colors"
