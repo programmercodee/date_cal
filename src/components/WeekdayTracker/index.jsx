@@ -389,26 +389,27 @@ export default function WeekdayTracker() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 flex flex-col">
-      {/* Sticky Top Quote Section */}
-      <div className="sticky top-0 z-50 bg-gradient-to-r from-blue-500/10 to-purple-500/10 py-2 border-b border-blue-100 shadow-sm transition-shadow duration-300"
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-purple-50/30 flex flex-col">
+      {/* Sticky Top Quote Section - Enhanced with better gradient and glow */}
+      <div className="sticky top-0 z-50 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 py-3 border-b border-blue-200/50 shadow-sm transition-all duration-300"
         style={{
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)'
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05)'
         }}>
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="relative h-12 flex items-center justify-center">
+            <div className="relative h-14 flex items-center justify-center">
               <div className={`
                 absolute inset-0 flex items-center justify-center
-                transition-opacity duration-500
-                ${isTopQuoteVisible ? 'opacity-100' : 'opacity-0'}
+                transition-all duration-500
+                ${isTopQuoteVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
               `}>
-                <div className="flex items-center gap-2 text-slate-700">
-                  <span className="text-xl animate-bounce-subtle">
+                <div className="flex items-center gap-3 text-slate-700 bg-white/50 px-6 py-2 rounded-full shadow-sm">
+                  <span className="text-2xl animate-bounce-subtle">
                     {topQuotes[currentTopQuote].emoji}
                   </span>
-                  <p className="text-sm sm:text-base font-medium">
+                  <p className="text-base sm:text-lg font-medium bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     {topQuotes[currentTopQuote].text}
                   </p>
                 </div>
@@ -436,71 +437,63 @@ export default function WeekdayTracker() {
         <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
           <div className={`max-w-7xl mx-auto transform transition-all duration-1000 ease-in-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}>
-            {/* Header Section with Clock */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8">
+            {/* Header Section with Clock - Enhanced with better gradient and glow */}
+            <div className="bg-gradient-to-br from-white/95 to-blue-50/50 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8 border border-blue-100/50 hover:shadow-xl transition-all duration-300">
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6">
                 <div className="text-center sm:text-left w-full sm:w-auto">
                   <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mb-3">
-                    <span className="text-3xl sm:text-4xl animate-bounce-subtle bg-gradient-to-br from-blue-500 to-purple-500 p-2 rounded-xl shadow-md">📊</span>
+                    <span className="text-3xl sm:text-4xl animate-bounce-subtle bg-gradient-to-br from-blue-500 to-purple-500 p-3 rounded-xl shadow-lg ring-2 ring-blue-100">📅</span>
                     <div>
-                      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 animate-fade-in">
-                        Weekday Tracker
+                      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent animate-fade-in">
+                        Your Weekday Calendar
                       </h1>
-                      <p className="text-slate-600 mt-2 flex items-center justify-center sm:justify-start gap-2 text-base sm:text-lg">
-                        <span className="text-xl sm:text-2xl animate-spin-slow">📅</span>
-                        {format(currentTime, "MMMM yyyy")}
-                      </p>
+                      <div className="mt-3 bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 rounded-xl shadow-sm border border-blue-100/50 inline-block transform transition-all duration-300 hover:scale-105 hover:shadow-md">
+                        <p className="text-slate-700 font-semibold text-lg sm:text-xl flex items-center gap-2">
+                          <span className="text-blue-500 animate-pulse-subtle">●</span>
+                          <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            {format(currentTime, "MMMM yyyy")}
+                          </span>
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="w-full sm:w-auto bg-gradient-to-br from-slate-100 to-blue-50 px-4 sm:px-6 py-3 sm:py-4 rounded-xl shadow-md flex items-center justify-center sm:justify-end gap-3 sm:gap-4">
-                  <span className="text-2xl sm:text-3xl animate-pulse">⏰</span>
-                  <span className="text-xl sm:text-2xl font-mono text-slate-700 animate-pulse-subtle">
+                <div className="w-full sm:w-auto bg-gradient-to-br from-slate-100 to-blue-50 px-6 py-4 rounded-xl shadow-md flex items-center justify-center sm:justify-end gap-4 border border-blue-100/50 hover:shadow-lg transition-all duration-300">
+                  <span className="text-xl sm:text-2xl font-mono font-semibold text-slate-700 animate-pulse-subtle">
                     {format(currentTime, "hh:mm:ss a")}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Next Saturday Countdown Section */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8">
+            {/* Next Saturday Countdown Section - Enhanced with better gradient and glow */}
+            <div className="bg-gradient-to-br from-white/95 to-purple-50/50 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8 border border-purple-100/50 hover:shadow-xl transition-all duration-300">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <span className="text-3xl sm:text-4xl bg-gradient-to-br from-purple-500 to-pink-500 p-2 rounded-xl shadow-md animate-bounce-subtle">🎉</span>
+                  <span className="text-3xl sm:text-4xl bg-gradient-to-br from-purple-500 to-pink-500 p-3 rounded-xl shadow-lg ring-2 ring-purple-100 animate-bounce-subtle">⏰</span>
                   <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-slate-800">
-                      Next Weekend Countdown
+                    <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      Time Until Weekend
                     </h2>
                     <p className="text-slate-600 mt-1 text-sm sm:text-base">
-                      {format(addDays(currentTime, (6 - currentTime.getDay() + 7) % 7), "EEEE, MMMM d, yyyy")}
+                      Next Saturday: {format(addDays(currentTime, (6 - currentTime.getDay() + 7) % 7), "EEEE, MMMM d, yyyy")}
                     </p>
                   </div>
                 </div>
                 <div className="grid grid-cols-4 gap-3 sm:gap-4 w-full sm:w-auto">
-                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 sm:p-4 text-center transform transition-all duration-300 hover:scale-105">
-                    <div className="text-2xl sm:text-3xl font-bold text-purple-600 animate-pulse-subtle">
-                      {String(timeToNextSaturday.days).padStart(2, '0')}
+                  {[
+                    { value: timeToNextSaturday.days, label: "Days" },
+                    { value: timeToNextSaturday.hours, label: "Hours" },
+                    { value: timeToNextSaturday.minutes, label: "Minutes" },
+                    { value: timeToNextSaturday.seconds, label: "Seconds" }
+                  ].map((item, index) => (
+                    <div key={index} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 sm:p-4 text-center transform transition-all duration-300 hover:scale-105 hover:shadow-md border border-purple-100/50">
+                      <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent animate-pulse-subtle">
+                        {String(item.value).padStart(2, '0')}
+                      </div>
+                      <div className="text-xs sm:text-sm text-slate-600 mt-1 font-medium">{item.label}</div>
                     </div>
-                    <div className="text-xs sm:text-sm text-slate-600 mt-1">Days</div>
-                  </div>
-                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 sm:p-4 text-center transform transition-all duration-300 hover:scale-105">
-                    <div className="text-2xl sm:text-3xl font-bold text-purple-600 animate-pulse-subtle">
-                      {String(timeToNextSaturday.hours).padStart(2, '0')}
-                    </div>
-                    <div className="text-xs sm:text-sm text-slate-600 mt-1">Hours</div>
-                  </div>
-                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 sm:p-4 text-center transform transition-all duration-300 hover:scale-105">
-                    <div className="text-2xl sm:text-3xl font-bold text-purple-600 animate-pulse-subtle">
-                      {String(timeToNextSaturday.minutes).padStart(2, '0')}
-                    </div>
-                    <div className="text-xs sm:text-sm text-slate-600 mt-1">Minutes</div>
-                  </div>
-                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 sm:p-4 text-center transform transition-all duration-300 hover:scale-105">
-                    <div className="text-2xl sm:text-3xl font-bold text-purple-600 animate-pulse-subtle">
-                      {String(timeToNextSaturday.seconds).padStart(2, '0')}
-                    </div>
-                    <div className="text-xs sm:text-sm text-slate-600 mt-1">Seconds</div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -508,9 +501,9 @@ export default function WeekdayTracker() {
             {/* Remaining Weekends Section */}
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8">
               <div className="flex items-center gap-3 sm:gap-4 mb-6">
-                <span className="text-3xl sm:text-4xl bg-gradient-to-br from-orange-500 to-red-500 p-2 rounded-xl shadow-md animate-bounce-subtle">🌅</span>
+                <span className="text-3xl sm:text-4xl bg-gradient-to-br from-orange-500 to-red-500 p-3 rounded-xl shadow-lg ring-2 ring-orange-100 animate-bounce-subtle">🌅</span>
                 <h2 className="text-xl sm:text-2xl font-bold text-slate-800">
-                  Remaining Weekends This Month
+                  Upcoming Weekends This Month
                 </h2>
               </div>
 
@@ -614,10 +607,10 @@ export default function WeekdayTracker() {
 
               {/* Legend for countdown labels */}
               <div className="mt-6 flex flex-wrap items-center gap-3 text-xs">
-                <span className="font-medium text-slate-600">When is it?</span>
+                <span className="font-medium text-slate-600">Time Until:</span>
                 <div className="flex flex-wrap gap-2">
-                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full">It's Today!</span>
-                  <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Coming Tomorrow</span>
+                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full">Today</span>
+                  <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Tomorrow</span>
                   <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full">Within 3 days</span>
                   <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded-full">Next week</span>
                   <span className="bg-slate-100 text-slate-700 px-2 py-1 rounded-full">Later this month</span>
@@ -625,77 +618,79 @@ export default function WeekdayTracker() {
               </div>
             </div>
 
-            {/* Stats Grid */}
+            {/* Stats Grid - Enhanced with better gradients and hover effects */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-              <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-5 sm:p-6 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-slide-up group" style={{ animationDelay: '0.1s' }}>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <span className="text-3xl sm:text-4xl bg-gradient-to-br from-blue-500 to-blue-600 p-2 rounded-xl shadow-md animate-bounce-subtle">✅</span>
-                    <span className="text-3xl sm:text-4xl font-bold text-slate-800">{totalWeekdays}</span>
+              {[
+                {
+                  icon: "📅",
+                  value: totalWeekdays,
+                  title: "Working Days This Month",
+                  description: `Total number of weekdays in ${format(currentTime, "MMMM")}`,
+                  gradient: "from-blue-500 to-blue-600",
+                  textGradient: "from-blue-600 to-blue-700",
+                  delay: "0.1s"
+                },
+                {
+                  icon: "✅",
+                  value: weekdaysTillToday,
+                  title: "Days Completed",
+                  description: "Working days that have passed",
+                  gradient: "from-emerald-500 to-emerald-600",
+                  textGradient: "from-emerald-600 to-emerald-700",
+                  delay: "0.2s"
+                },
+                {
+                  icon: "⏳",
+                  value: remainingWeekdays,
+                  title: "Days Left",
+                  description: "Working days remaining this month",
+                  gradient: "from-indigo-500 to-indigo-600",
+                  textGradient: "from-indigo-600 to-indigo-700",
+                  delay: "0.3s"
+                }
+              ].map((stat, index) => (
+                <div
+                  key={index}
+                  className={`bg-gradient-to-br from-white/95 to-${stat.gradient.split('-')[1]}-50/50 backdrop-blur-sm rounded-2xl shadow-lg p-5 sm:p-6 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-slide-up group border border-${stat.gradient.split('-')[1]}-100/50`}
+                  style={{ animationDelay: stat.delay }}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <span className={`text-3xl sm:text-4xl bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg ring-2 ring-${stat.gradient.split('-')[1]}-100 animate-bounce-subtle`}>
+                        {stat.icon}
+                      </span>
+                      <span className={`text-3xl sm:text-4xl font-bold bg-gradient-to-r ${stat.textGradient} bg-clip-text text-transparent`}>
+                        {stat.value}
+                      </span>
+                    </div>
                   </div>
+                  <h3 className={`text-lg sm:text-xl font-medium bg-gradient-to-r ${stat.textGradient} bg-clip-text text-transparent group-hover:scale-105 transition-all`}>
+                    {stat.title}
+                  </h3>
+                  <p className="text-slate-500 mt-2 text-sm">
+                    {stat.description}
+                  </p>
                 </div>
-                <h3 className="text-lg sm:text-xl font-medium text-slate-700 group-hover:text-blue-600 transition-colors flex items-center gap-2">
-                  <span className="text-xl sm:text-2xl">📋</span>
-                  Total Weekdays
-                </h3>
-                <p className="text-slate-500 mt-2 text-sm flex items-center gap-2">
-                  <span className="animate-pulse-subtle">📈</span>
-                  Total working days this month
-                </p>
-              </div>
-
-              <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-5 sm:p-6 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-slide-up group" style={{ animationDelay: '0.2s' }}>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <span className="text-3xl sm:text-4xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-2 rounded-xl shadow-md animate-bounce-subtle">📅</span>
-                    <span className="text-3xl sm:text-4xl font-bold text-slate-800">{weekdaysTillToday}</span>
-                  </div>
-                </div>
-                <h3 className="text-lg sm:text-xl font-medium text-slate-700 group-hover:text-emerald-600 transition-colors flex items-center gap-2">
-                  <span className="text-xl sm:text-2xl">🎯</span>
-                  Weekdays Till Today
-                </h3>
-                <p className="text-slate-500 mt-2 text-sm flex items-center gap-2">
-                  <span className="animate-pulse-subtle">📊</span>
-                  Days completed so far
-                </p>
-              </div>
-
-              <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-5 sm:p-6 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-slide-up group sm:col-span-2 lg:col-span-1" style={{ animationDelay: '0.3s' }}>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <span className="text-3xl sm:text-4xl bg-gradient-to-br from-indigo-500 to-indigo-600 p-2 rounded-xl shadow-md animate-bounce-subtle">⏳</span>
-                    <span className="text-3xl sm:text-4xl font-bold text-slate-800">{remainingWeekdays}</span>
-                  </div>
-                </div>
-                <h3 className="text-lg sm:text-xl font-medium text-slate-700 group-hover:text-indigo-600 transition-colors flex items-center gap-2">
-                  <span className="text-xl sm:text-2xl">🎪</span>
-                  Remaining Weekdays
-                </h3>
-                <p className="text-slate-500 mt-2 text-sm flex items-center gap-2">
-                  <span className="animate-pulse-subtle">📉</span>
-                  Days left this month
-                </p>
-              </div>
+              ))}
             </div>
 
             {/* Calendar Section */}
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <span className="text-3xl sm:text-4xl bg-gradient-to-br from-blue-500 to-purple-500 p-2 rounded-xl shadow-md animate-bounce-subtle">📆</span>
-                  <h2 className="text-xl sm:text-2xl font-bold text-slate-800">
-                    Weekday Details
+                  <span className="text-3xl sm:text-4xl bg-gradient-to-br from-blue-500 to-purple-500 p-3 rounded-xl shadow-lg ring-2 ring-blue-100 animate-bounce-subtle">📆</span>
+                  <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    Monthly Calendar View
                   </h2>
                 </div>
                 <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-sm">
-                  <div className="flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-lg">
-                    <span className="w-3 h-3 rounded-full bg-blue-100 border-2 border-blue-500"></span>
-                    <span className="text-slate-600 font-medium">Today</span>
+                  <div className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-blue-100/50 px-4 py-2 rounded-lg shadow-sm border border-blue-100/50">
+                    <span className="w-3 h-3 rounded-full bg-blue-100 border-2 border-blue-500 animate-pulse"></span>
+                    <span className="text-slate-700 font-medium">Current Day</span>
                   </div>
-                  <div className="flex items-center gap-2 bg-red-50 px-3 py-1.5 rounded-lg">
+                  <div className="flex items-center gap-2 bg-gradient-to-r from-red-50 to-red-100/50 px-4 py-2 rounded-lg shadow-sm border border-red-100/50">
                     <span className="w-3 h-3 rounded-full bg-red-100 border-2 border-red-400"></span>
-                    <span className="text-slate-600 font-medium">Weekend</span>
+                    <span className="text-slate-700 font-medium">Weekend Days</span>
                   </div>
                 </div>
               </div>
@@ -710,50 +705,45 @@ export default function WeekdayTracker() {
                       key={idx}
                       className={`
                         p-3 sm:p-4 rounded-xl shadow-sm transform transition-all duration-300
-                        ${isWeekendDay ? 'bg-red-50/80 hover:bg-red-100/80' : 'bg-slate-50/80 hover:bg-slate-100/80'}
-                        ${isCurrentDay ? 'ring-2 ring-blue-500 bg-blue-50/80' : ''}
+                        ${isWeekendDay
+                          ? 'bg-gradient-to-br from-red-50/80 to-red-100/80 hover:from-red-100/80 hover:to-red-200/80'
+                          : 'bg-gradient-to-br from-slate-50/80 to-slate-100/80 hover:from-slate-100/80 hover:to-slate-200/80'
+                        }
+                        ${isCurrentDay ? 'ring-2 ring-blue-500 bg-gradient-to-br from-blue-50/80 to-blue-100/80' : ''}
                         hover:shadow-md hover:-translate-y-0.5
-                        animate-slide-in group backdrop-blur-sm
+                        animate-slide-in group backdrop-blur-sm border border-${isWeekendDay ? 'red' : 'slate'}-100/50
                       `}
                       style={{ animationDelay: `${idx * 0.05}s` }}
                     >
                       <div className="flex items-center justify-between gap-2 sm:gap-3">
-                        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                        <div className="flex flex-col min-w-0">
                           <span className={`
-                            text-xl sm:text-2xl p-2 rounded-lg shadow-sm flex-shrink-0
-                            ${isWeekendDay ? 'bg-red-100 text-red-500' : 'bg-slate-100 text-slate-500'}
-                            ${isCurrentDay ? 'bg-blue-100 text-blue-500' : ''}
-                            animate-pulse-subtle
+                            font-medium text-base sm:text-lg truncate
+                            ${isWeekendDay ? 'text-red-600' : 'text-slate-600'}
+                            ${isCurrentDay ? 'text-blue-600' : ''}
+                            group-hover:text-slate-800 transition-colors
                           `}>
-                            {isWeekendDay ? '🌅' : '📌'}
+                            {format(day, "EEEE")}
                           </span>
-                          <div className="flex flex-col min-w-0">
-                            <span className={`
-                              font-medium text-base sm:text-lg truncate
-                              ${isWeekendDay ? 'text-red-600' : 'text-slate-600'}
-                              ${isCurrentDay ? 'text-blue-600' : ''}
-                              group-hover:text-slate-800 transition-colors
-                            `}>
-                              {format(day, "EEEE")}
-                            </span>
-                            <span className={`
-                              text-sm truncate
-                              ${isWeekendDay ? 'text-red-500' : 'text-slate-500'}
-                              ${isCurrentDay ? 'text-blue-500' : ''}
-                            `}>
-                              {format(day, "MMM d")}
-                            </span>
-                          </div>
+                          <span className={`
+                            text-sm truncate
+                            ${isWeekendDay ? 'text-red-500' : 'text-slate-500'}
+                            ${isCurrentDay ? 'text-blue-500' : ''}
+                          `}>
+                            {format(day, "MMM d")}
+                          </span>
                         </div>
                         <div className="flex flex-col items-end gap-1 flex-shrink-0">
                           {isCurrentDay && (
-                            <div className="flex items-center gap-1.5 bg-blue-100 px-2 py-1 rounded-lg">
+                            <div className="flex items-center gap-1.5 bg-gradient-to-r from-blue-100 to-blue-200 px-3 py-1 rounded-lg shadow-sm">
                               <span className="text-blue-500 animate-pulse text-xs">●</span>
                               <span className="text-xs font-medium text-blue-600">Today</span>
                             </div>
                           )}
                           {isWeekendDay && (
-                            <span className="bg-red-100 text-red-500 text-xs font-medium px-2 py-1 rounded-lg">Weekend</span>
+                            <span className="bg-gradient-to-r from-red-100 to-red-200 text-red-500 text-xs font-medium px-3 py-1 rounded-lg shadow-sm">
+                              Weekend
+                            </span>
                           )}
                         </div>
                       </div>
@@ -778,17 +768,12 @@ export default function WeekdayTracker() {
                   transition-opacity duration-500
                   ${isQuoteVisible ? 'opacity-100' : 'opacity-0'}
                 `}>
-                  <div className="relative px-8">
-                    <span className="text-4xl text-blue-400/30 absolute -left-4 -top-4">"</span>
-                    <div className="flex flex-col items-center gap-2">
-                      <span className="text-3xl sm:text-4xl animate-bounce-subtle">
-                        {programmerQuotes[currentQuote].emoji}
-                      </span>
+                  <div className="relative px-8 py-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-2xl backdrop-blur-sm border border-slate-700/50">
+                    <div className="flex flex-col items-center gap-3">
                       <p className="text-lg sm:text-xl text-slate-200 italic">
                         {programmerQuotes[currentQuote].text}
                       </p>
                     </div>
-                    <span className="text-4xl text-blue-400/30 absolute -right-4 -bottom-4">"</span>
                   </div>
                 </div>
               </div>
@@ -832,7 +817,7 @@ export default function WeekdayTracker() {
 
             {/* Copyright */}
             <div className="text-center text-slate-500 text-sm mt-6">
-              © {new Date().getFullYear()} Weekday Tracker. All rights reserved.
+              © {new Date().getFullYear()} Your Weekday Calendar. Made with ❤️ for better time management.
             </div>
           </div>
         </div>
