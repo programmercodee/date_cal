@@ -24,6 +24,7 @@ export default function WeekdayTracker() {
   const [isQuoteVisible, setIsQuoteVisible] = useState(true);
   const [currentTopQuote, setCurrentTopQuote] = useState(0);
   const [isTopQuoteVisible, setIsTopQuoteVisible] = useState(true);
+  const [activeWeek, setActiveWeek] = useState(0);
 
   const programmerQuotes = [
     {
@@ -304,15 +305,13 @@ export default function WeekdayTracker() {
     const targetDate = startOfDay(date);
     const daysUntil = differenceInDays(targetDate, today);
 
-    // More natural language labels
-    if (daysUntil < 0) return { text: "It's Today!", color: "bg-green-100 text-green-700" };
-    if (daysUntil === 0) return { text: "It's Today!", color: "bg-green-100 text-green-700" };
-    if (daysUntil === 1) return { text: "Coming Tomorrow", color: "bg-blue-100 text-blue-700" };
-    if (daysUntil === 2) return { text: "Day After Tomorrow", color: "bg-purple-100 text-purple-700" };
-    if (daysUntil <= 3) return { text: `Just ${daysUntil} days away`, color: "bg-purple-100 text-purple-700" };
-    if (daysUntil <= 7) return { text: `Next week (${daysUntil} days)`, color: "bg-orange-100 text-orange-700" };
-    if (daysUntil <= 14) return { text: `In ${daysUntil} days (Next week)`, color: "bg-orange-100 text-orange-700" };
-    return { text: `${format(date, "MMM d")} (${daysUntil} days)`, color: "bg-slate-100 text-slate-700" };
+    if (daysUntil < 0) return { text: "Past", color: "bg-slate-100 text-slate-500" };
+    if (daysUntil === 0) return { text: "Today", color: "bg-blue-100 text-blue-600" };
+    if (daysUntil === 1) return { text: "Tomorrow", color: "bg-green-100 text-green-600" };
+    if (daysUntil <= 3) return { text: `In ${daysUntil} days`, color: "bg-purple-100 text-purple-600" };
+    if (daysUntil <= 7) return { text: `Next week (${daysUntil}d)`, color: "bg-orange-100 text-orange-600" };
+    if (daysUntil <= 14) return { text: `In ${daysUntil} days`, color: "bg-amber-100 text-amber-600" };
+    return { text: `${format(date, "MMM d")} (${daysUntil}d)`, color: "bg-slate-100 text-slate-600" };
   };
 
   // Calculate dates for the month
@@ -387,6 +386,82 @@ export default function WeekdayTracker() {
     // Cleanup
     return () => clearInterval(timer);
   }, []);
+
+  // Add this function to group dates by weeks
+  const getWeeksFromDates = (dates) => {
+    const weeks = [];
+    let currentWeek = [];
+
+    dates.forEach((date, index) => {
+      currentWeek.push(date);
+      if (currentWeek.length === 7 || index === dates.length - 1) {
+        weeks.push([...currentWeek]);
+        currentWeek = [];
+      }
+    });
+
+    return weeks;
+  };
+
+  // Update the getCurrentDayProgress function to be more precise
+  const getCurrentDayProgress = () => {
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    const totalMilliseconds = endOfDay - startOfDay;
+    const elapsedMilliseconds = now - startOfDay;
+    return (elapsedMilliseconds / totalMilliseconds) * 100;
+  };
+
+  // Add useEffect to force smooth updates
+  useEffect(() => {
+    const updateProgress = () => {
+      // Force a re-render every second for smooth animation
+      setCurrentTime(new Date());
+    };
+
+    const interval = setInterval(updateProgress, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Add these new functions after the existing state declarations
+  const getTimeUntil = (targetDate) => {
+    const now = new Date();
+    const diff = differenceInSeconds(targetDate, now);
+
+    if (diff <= 0) return null;
+
+    const days = Math.floor(diff / (24 * 60 * 60));
+    const hours = Math.floor((diff % (24 * 60 * 60)) / (60 * 60));
+    const minutes = Math.floor((diff % (60 * 60)) / 60);
+    const seconds = diff % 60;
+
+    return { days, hours, minutes, seconds };
+  };
+
+  const getSectionCountdown = (date) => {
+    const now = new Date();
+    const targetDate = startOfDay(date);
+    const diff = differenceInSeconds(targetDate, now);
+
+    if (diff <= 0) return null;
+
+    if (diff < 24 * 60 * 60) {
+      // Less than a day
+      const hours = Math.floor(diff / (60 * 60));
+      const minutes = Math.floor((diff % (60 * 60)) / 60);
+      return `${hours}h ${minutes}m`;
+    } else if (diff < 7 * 24 * 60 * 60) {
+      // Less than a week
+      const days = Math.floor(diff / (24 * 60 * 60));
+      return `${days}d left`;
+    } else {
+      // More than a week
+      const weeks = Math.floor(diff / (7 * 24 * 60 * 60));
+      const days = Math.floor((diff % (7 * 24 * 60 * 60)) / (24 * 60 * 60));
+      return `${weeks}w ${days}d`;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-purple-50/30 flex flex-col">
@@ -519,6 +594,9 @@ export default function WeekdayTracker() {
                   <div className="space-y-3">
                     {remainingWeekends.saturdays.map((date, idx) => {
                       const daysUntil = getDaysUntilLabel(date);
+                      const timeUntil = getTimeUntil(date);
+                      const sectionCountdown = getSectionCountdown(date);
+
                       return (
                         <div
                           key={idx}
@@ -567,6 +645,9 @@ export default function WeekdayTracker() {
                   <div className="space-y-3">
                     {remainingWeekends.sundays.map((date, idx) => {
                       const daysUntil = getDaysUntilLabel(date);
+                      const timeUntil = getTimeUntil(date);
+                      const sectionCountdown = getSectionCountdown(date);
+
                       return (
                         <div
                           key={idx}
@@ -675,81 +756,205 @@ export default function WeekdayTracker() {
             </div>
 
             {/* Calendar Section */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <span className="text-3xl sm:text-4xl bg-gradient-to-br from-blue-500 to-purple-500 p-3 rounded-xl shadow-lg ring-2 ring-blue-100 animate-bounce-subtle">📆</span>
-                  <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Monthly Calendar View
-                  </h2>
-                </div>
-                <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-sm">
-                  <div className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-blue-100/50 px-4 py-2 rounded-lg shadow-sm border border-blue-100/50">
-                    <span className="w-3 h-3 rounded-full bg-blue-100 border-2 border-blue-500 animate-pulse"></span>
-                    <span className="text-slate-700 font-medium">Current Day</span>
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg">
+              {/* Header - Fixed */}
+              <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-slate-100 p-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl sm:text-3xl bg-gradient-to-br from-blue-500 to-purple-500 p-2 rounded-lg shadow-sm">📆</span>
+                    <h2 className="text-lg sm:text-xl font-bold text-slate-800">
+                      Monthly Calendar View
+                    </h2>
                   </div>
-                  <div className="flex items-center gap-2 bg-gradient-to-r from-red-50 to-red-100/50 px-4 py-2 rounded-lg shadow-sm border border-red-100/50">
-                    <span className="w-3 h-3 rounded-full bg-red-100 border-2 border-red-400"></span>
-                    <span className="text-slate-700 font-medium">Weekend Days</span>
+
+                  {/* Scrollable Labels Container */}
+                  <div className="w-full sm:w-auto overflow-x-auto pb-2 -mb-2 sm:pb-0 sm:mb-0">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm min-w-max px-1">
+                      <div className="flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                        <span className="text-slate-700">Today</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 bg-green-50 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                        <span className="text-slate-700">Tomorrow</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 bg-purple-50 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        <span className="w-2 h-2 rounded-full bg-purple-500"></span>
+                        <span className="text-slate-700">This Week</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 bg-red-50 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                        <span className="text-slate-700">Weekend</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-full whitespace-nowrap">
+                        <span className="w-2 h-2 rounded-full bg-slate-400"></span>
+                        <span className="text-slate-700">Past Days</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2 sm:pr-4">
-                {allDates.map((day, idx) => {
-                  const isWeekendDay = isSaturday(day) || isSunday(day);
-                  const isCurrentDay = isToday(day);
+              {/* Calendar Grid - Scrollable */}
+              <div className="p-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+                  {allDates.map((day, idx) => {
+                    const isWeekendDay = isSaturday(day) || isSunday(day);
+                    const isCurrentDay = isToday(day);
+                    const isPastDay = isAfter(startOfToday(), day);
+                    const daysUntil = getDaysUntilLabel(day);
+                    const timeUntil = getTimeUntil(day);
+                    const sectionCountdown = getSectionCountdown(day);
 
-                  return (
-                    <div
-                      key={idx}
-                      className={`
-                        p-3 sm:p-4 rounded-xl shadow-sm transform transition-all duration-300
-                        ${isWeekendDay
-                          ? 'bg-gradient-to-br from-red-50/80 to-red-100/80 hover:from-red-100/80 hover:to-red-200/80'
-                          : 'bg-gradient-to-br from-slate-50/80 to-slate-100/80 hover:from-slate-100/80 hover:to-slate-200/80'
-                        }
-                        ${isCurrentDay ? 'ring-2 ring-blue-500 bg-gradient-to-br from-blue-50/80 to-blue-100/80' : ''}
-                        hover:shadow-md hover:-translate-y-0.5
-                        animate-slide-in group backdrop-blur-sm border border-${isWeekendDay ? 'red' : 'slate'}-100/50
-                      `}
-                      style={{ animationDelay: `${idx * 0.05}s` }}
-                    >
-                      <div className="flex items-center justify-between gap-2 sm:gap-3">
-                        <div className="flex flex-col min-w-0">
-                          <span className={`
-                            font-medium text-base sm:text-lg truncate
-                            ${isWeekendDay ? 'text-red-600' : 'text-slate-600'}
-                            ${isCurrentDay ? 'text-blue-600' : ''}
-                            group-hover:text-slate-800 transition-colors
-                          `}>
-                            {format(day, "EEEE")}
-                          </span>
-                          <span className={`
-                            text-sm truncate
-                            ${isWeekendDay ? 'text-red-500' : 'text-slate-500'}
-                            ${isCurrentDay ? 'text-blue-500' : ''}
-                          `}>
-                            {format(day, "MMM d")}
-                          </span>
-                        </div>
-                        <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                          {isCurrentDay && (
-                            <div className="flex items-center gap-1.5 bg-gradient-to-r from-blue-100 to-blue-200 px-3 py-1 rounded-lg shadow-sm">
-                              <span className="text-blue-500 animate-pulse text-xs">●</span>
-                              <span className="text-xs font-medium text-blue-600">Today</span>
+                    return (
+                      <div
+                        key={idx}
+                        className={`
+                          p-3 rounded-lg relative group
+                          ${isWeekendDay
+                            ? isPastDay
+                              ? 'bg-red-100/50'
+                              : 'bg-red-50 hover:bg-red-100/50'
+                            : isPastDay
+                              ? 'bg-slate-100/50'
+                              : 'bg-slate-50 hover:bg-slate-100/50'
+                          }
+                          ${isCurrentDay ? 'ring-2 ring-blue-500 bg-blue-50' : ''}
+                          ${isPastDay ? 'opacity-75' : ''}
+                          transition-all duration-200
+                        `}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-grow">
+                            <div className={`
+                              font-medium
+                              ${isWeekendDay ? 'text-red-600' : 'text-slate-700'}
+                              ${isCurrentDay ? 'text-blue-600' : ''}
+                              ${isPastDay ? 'line-through' : ''}
+                            `}>
+                              {format(day, "EEEE")}
                             </div>
-                          )}
-                          {isWeekendDay && (
-                            <span className="bg-gradient-to-r from-red-100 to-red-200 text-red-500 text-xs font-medium px-3 py-1 rounded-lg shadow-sm">
-                              Weekend
-                            </span>
-                          )}
+                            <div className={`
+                              text-sm
+                              ${isPastDay ? 'text-slate-400' : 'text-slate-500'}
+                            `}>
+                              {format(day, "MMM d")}
+                            </div>
+
+                            {/* Countdown Section */}
+                            {!isPastDay && !isCurrentDay && timeUntil && (
+                              <div className="mt-2 space-y-1">
+                                <div className="flex items-center gap-1 text-xs text-slate-600">
+                                  <span className="animate-pulse">⏳</span>
+                                  <span>{sectionCountdown}</span>
+                                </div>
+                                <div className="grid grid-cols-4 gap-1">
+                                  {[
+                                    { value: timeUntil.days, label: 'D', color: 'from-blue-500 to-blue-600' },
+                                    { value: timeUntil.hours, label: 'H', color: 'from-purple-500 to-purple-600' },
+                                    { value: timeUntil.minutes, label: 'M', color: 'from-pink-500 to-pink-600' },
+                                    { value: timeUntil.seconds, label: 'S', color: 'from-orange-500 to-orange-600' }
+                                  ].map((item, index) => (
+                                    <div key={index} className="relative">
+                                      <div className={`
+                                        text-[10px] font-medium text-center
+                                        bg-gradient-to-br ${item.color} bg-clip-text text-transparent
+                                      `}>
+                                        {String(item.value).padStart(2, '0')}
+                                      </div>
+                                      <div className="text-[8px] text-center text-slate-500">
+                                        {item.label}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {isCurrentDay && (
+                              <div className="mt-2">
+                                <div className="flex items-center gap-2 text-xs text-blue-600 font-medium mb-1">
+                                  <span className="animate-pulse">●</span>
+                                  <span>{format(currentTime, "hh:mm:ss a")}</span>
+                                </div>
+                                <div className="relative w-full h-4 bg-blue-50 rounded-full overflow-hidden border border-blue-100">
+                                  {/* Wave animation container */}
+                                  <div
+                                    className="absolute inset-0 transition-all duration-1000 ease-linear"
+                                    style={{
+                                      width: `${getCurrentDayProgress()}%`,
+                                      background: 'linear-gradient(90deg, #3b82f6, #60a5fa)'
+                                    }}
+                                  >
+                                    {/* Wave effect */}
+                                    <div className="absolute inset-0 overflow-hidden">
+                                      <div className="absolute inset-0 wave-animation" style={{
+                                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                                        transform: 'translateX(-100%)',
+                                        animation: 'wave 2s linear infinite'
+                                      }}></div>
+                                      <div className="absolute inset-0 wave-animation" style={{
+                                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                                        transform: 'translateX(-100%)',
+                                        animation: 'wave 3s linear infinite 0.5s'
+                                      }}></div>
+                                    </div>
+                                    {/* Shine effect */}
+                                    <div className="absolute inset-0 shine-animation"></div>
+                                  </div>
+                                  {/* Time markers */}
+                                  <div className="absolute inset-0 flex justify-between items-center px-1 pointer-events-none">
+                                    <div className="h-full w-px bg-blue-100"></div>
+                                    <div className="h-full w-px bg-blue-100"></div>
+                                    <div className="h-full w-px bg-blue-100"></div>
+                                  </div>
+                                </div>
+                                <div className="flex justify-between text-[10px] text-slate-500 mt-0.5 px-0.5">
+                                  <span>12 AM</span>
+                                  <span>12 PM</span>
+                                  <span>12 AM</span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Status Labels */}
+                          <div className="flex flex-col items-end gap-1 ml-2">
+                            <div className="flex flex-col items-end gap-1">
+                              {isCurrentDay ? (
+                                <div className="flex items-center gap-1 bg-blue-100 px-2 py-0.5 rounded text-xs font-medium text-blue-600">
+                                  Today
+                                </div>
+                              ) : (
+                                <div className={`flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium ${daysUntil.color}`}>
+                                  {daysUntil.text}
+                                </div>
+                              )}
+                              {isWeekendDay && !isPastDay && (
+                                <div className="flex items-center gap-1 bg-red-100 px-2 py-0.5 rounded text-xs font-medium text-red-600">
+                                  Weekend
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         </div>
+
+                        {/* Hover effect for future days */}
+                        {!isPastDay && !isCurrentDay && (
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-lg"></div>
+                          </div>
+                        )}
+
+                        {isPastDay && (
+                          <div className="absolute inset-0 pointer-events-none">
+                            <div className="absolute inset-0 bg-gradient-to-br from-transparent to-slate-100/30 rounded-lg"></div>
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
@@ -919,28 +1124,14 @@ export default function WeekdayTracker() {
           to { opacity: 1; }
         }
 
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 2px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, #cbd5e1, #94a3b8);
-          border-radius: 2px;
-          transition: all 0.3s ease;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, #94a3b8, #64748b);
+        .custom-scrollbar {
+          -webkit-overflow-scrolling: touch;
         }
 
         @media (max-width: 640px) {
-          .custom-scrollbar::-webkit-scrollbar {
-            width: 2px;
+          .custom-scrollbar {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
           }
         }
 
@@ -956,6 +1147,119 @@ export default function WeekdayTracker() {
 
         .quote-transition {
           transition: opacity 0.5s ease-in-out;
+        }
+
+        @keyframes progressPulse {
+          0% { opacity: 1; }
+          50% { opacity: 0.7; }
+          100% { opacity: 1; }
+        }
+
+        .progress-bar {
+          animation: progressPulse 2s infinite;
+        }
+
+        @keyframes wave {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+
+        @keyframes shine {
+          0% {
+            background-position: -100% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
+        }
+
+        .wave-animation {
+          will-change: transform;
+        }
+
+        .shine-animation {
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+          );
+          background-size: 200% 100%;
+          animation: shine 3s linear infinite;
+          will-change: background-position;
+        }
+
+        /* Add a subtle pulse to the progress bar container */
+        .progress-container {
+          animation: containerPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes containerPulse {
+          0%, 100% {
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.1);
+          }
+          50% {
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+          }
+        }
+
+        /* Custom scrollbar for the labels container */
+        .overflow-x-auto {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(203, 213, 225, 0.5) transparent;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar {
+          height: 4px;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+          background-color: rgba(203, 213, 225, 0.5);
+          border-radius: 20px;
+        }
+
+        .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+          background-color: rgba(203, 213, 225, 0.7);
+        }
+
+        /* Add a subtle gradient fade on the sides */
+        .overflow-x-auto::after {
+          content: '';
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          width: 20px;
+          background: linear-gradient(to right, transparent, white);
+          pointer-events: none;
+        }
+
+        .overflow-x-auto::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 20px;
+          background: linear-gradient(to left, transparent, white);
+          pointer-events: none;
+        }
+
+        /* Ensure smooth scrolling on mobile */
+        @media (max-width: 640px) {
+          .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            overscroll-behavior-x: contain;
+          }
         }
       `}</style>
     </div>
