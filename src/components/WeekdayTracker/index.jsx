@@ -666,6 +666,167 @@ export default function WeekdayTracker() {
               </div>
             </div>
 
+
+            {/* Dynamic Working Hours Section */}
+            <div className="bg-gradient-to-br from-white/95 to-emerald-50/50 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8 border border-emerald-100/50 hover:shadow-xl transition-all duration-300">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <span className="text-3xl sm:text-4xl bg-gradient-to-br from-emerald-500 to-teal-500 p-3 rounded-xl shadow-lg ring-2 ring-emerald-100 animate-bounce-subtle">⏰</span>
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                      Working Hours Status
+                    </h2>
+                    <p className="text-slate-600 mt-1 text-sm sm:text-base">
+                      {format(currentTime, "EEEE, MMMM d, yyyy")}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Dynamic Status Display */}
+                <div className="w-full sm:w-auto">
+                  {(() => {
+                    const currentDay = currentTime.getDay();
+                    const currentHour = currentTime.getHours();
+                    const currentMinute = currentTime.getMinutes();
+                    const isWeekend = currentDay === 0 || currentDay === 6;
+                    const isWorkingDay = currentDay >= 1 && currentDay <= 5;
+                    const isWorkingHours = currentHour >= 10 && (currentHour < 18 || (currentHour === 18 && currentMinute <= 30));
+
+                    // Calculate time until next work period
+                    const getTimeUntilNextWork = () => {
+                      const now = new Date();
+                      let nextWorkTime = new Date(now);
+
+                      if (isWeekend) {
+                        // If weekend, calculate time until Monday 10 AM
+                        const daysUntilMonday = (8 - currentDay) % 7;
+                        nextWorkTime.setDate(now.getDate() + daysUntilMonday);
+                        nextWorkTime.setHours(10, 0, 0, 0);
+                      } else if (!isWorkingHours) {
+                        // If after work hours, calculate time until next day 10 AM
+                        if (currentHour >= 18 || (currentHour === 18 && currentMinute > 30)) {
+                          nextWorkTime.setDate(now.getDate() + 1);
+                          nextWorkTime.setHours(10, 0, 0, 0);
+                        } else {
+                          // Before work hours
+                          nextWorkTime.setHours(10, 0, 0, 0);
+                        }
+                      }
+
+                      const diff = differenceInSeconds(nextWorkTime, now);
+                      const days = Math.floor(diff / (24 * 60 * 60));
+                      const hours = Math.floor((diff % (24 * 60 * 60)) / (60 * 60));
+                      const minutes = Math.floor((diff % (60 * 60)) / 60);
+                      const seconds = diff % 60;
+
+                      return { days, hours, minutes, seconds };
+                    };
+
+                    // Calculate remaining work time
+                    const getRemainingWorkTime = () => {
+                      const now = new Date();
+                      const endTime = new Date(now);
+                      endTime.setHours(18, 30, 0, 0);
+
+                      const diff = differenceInSeconds(endTime, now);
+                      const hours = Math.floor(diff / (60 * 60));
+                      const minutes = Math.floor((diff % (60 * 60)) / 60);
+                      const seconds = diff % 60;
+
+                      return { hours, minutes, seconds };
+                    };
+
+                    if (isWeekend) {
+                      const timeUntil = getTimeUntilNextWork();
+                      return (
+                        <div className="bg-gradient-to-br from-red-50 to-pink-50 rounded-xl p-4 border border-red-100">
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="text-2xl">🏖️</span>
+                            <div className="text-red-600 font-semibold">Weekend Holiday</div>
+                          </div>
+                          <div className="text-slate-600 text-sm mb-2">Next work day starts in:</div>
+                          <div className="grid grid-cols-4 gap-2">
+                            {[
+                              { value: timeUntil.days, label: 'Days', color: 'from-red-500 to-red-600' },
+                              { value: timeUntil.hours, label: 'Hours', color: 'from-pink-500 to-pink-600' },
+                              { value: timeUntil.minutes, label: 'Mins', color: 'from-rose-500 to-rose-600' },
+                              { value: timeUntil.seconds, label: 'Secs', color: 'from-orange-500 to-orange-600' }
+                            ].map((item, index) => (
+                              <div key={index} className="bg-white/80 rounded-lg p-2 text-center">
+                                <div className={`text-lg font-bold bg-gradient-to-r ${item.color} bg-clip-text text-transparent`}>
+                                  {String(item.value).padStart(2, '0')}
+                                </div>
+                                <div className="text-xs text-slate-500">{item.label}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    if (isWorkingHours) {
+                      const remaining = getRemainingWorkTime();
+                      return (
+                        <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-4 border border-emerald-100">
+                          <div className="flex items-center gap-3 mb-3">
+                            <span className="text-2xl">💼</span>
+                            <div className="text-emerald-600 font-semibold">Working Hours</div>
+                          </div>
+                          <div className="text-slate-600 text-sm mb-2">Time remaining today:</div>
+                          <div className="grid grid-cols-3 gap-2">
+                            {[
+                              { value: remaining.hours, label: 'Hours', color: 'from-emerald-500 to-emerald-600' },
+                              { value: remaining.minutes, label: 'Mins', color: 'from-teal-500 to-teal-600' },
+                              { value: remaining.seconds, label: 'Secs', color: 'from-cyan-500 to-cyan-600' }
+                            ].map((item, index) => (
+                              <div key={index} className="bg-white/80 rounded-lg p-2 text-center">
+                                <div className={`text-lg font-bold bg-gradient-to-r ${item.color} bg-clip-text text-transparent`}>
+                                  {String(item.value).padStart(2, '0')}
+                                </div>
+                                <div className="text-xs text-slate-500">{item.label}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    // Before or after work hours on weekdays
+                    const timeUntil = getTimeUntilNextWork();
+                    return (
+                      <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-4 border border-amber-100">
+                        <div className="flex items-center gap-3 mb-3">
+                          <span className="text-2xl">🌙</span>
+                          <div className="text-amber-600 font-semibold">
+                            {currentHour < 10 ? 'Before Work Hours' : 'After Work Hours'}
+                          </div>
+                        </div>
+                        <div className="text-slate-600 text-sm mb-2">Next work period starts in:</div>
+                        <div className="grid grid-cols-4 gap-2">
+                          {[
+                            { value: timeUntil.days, label: 'Days', color: 'from-amber-500 to-amber-600' },
+                            { value: timeUntil.hours, label: 'Hours', color: 'from-orange-500 to-orange-600' },
+                            { value: timeUntil.minutes, label: 'Mins', color: 'from-yellow-500 to-yellow-600' },
+                            { value: timeUntil.seconds, label: 'Secs', color: 'from-red-500 to-red-600' }
+                          ].map((item, index) => (
+                            <div key={index} className="bg-white/80 rounded-lg p-2 text-center">
+                              <div className={`text-lg font-bold bg-gradient-to-r ${item.color} bg-clip-text text-transparent`}>
+                                {String(item.value).padStart(2, '0')}
+                              </div>
+                              <div className="text-xs text-slate-500">{item.label}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+            </div>
+
+
+
+
             {/* Next Saturday Countdown Section - Enhanced with better gradient and glow */}
             <div className="bg-gradient-to-br from-white/95 to-purple-50/50 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8 border border-purple-100/50 hover:shadow-xl transition-all duration-300">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
@@ -1082,6 +1243,9 @@ export default function WeekdayTracker() {
                 </div>
               </div>
             </div>
+
+
+
           </div>
         </div>
       </div>
