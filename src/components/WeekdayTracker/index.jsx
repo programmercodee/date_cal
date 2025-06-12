@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { eachDayOfInterval, isWeekend, format, getMonth, getYear, isToday, isSaturday, isSunday, addDays, differenceInSeconds, differenceInDays, differenceInHours, differenceInMinutes, startOfDay } from "date-fns";
+import { eachDayOfInterval, isWeekend, format, getMonth, getYear, isToday, isSaturday, isSunday, addDays, differenceInSeconds, differenceInDays, differenceInHours, differenceInMinutes, startOfDay, isAfter, isSameDay, startOfToday } from "date-fns";
 
 export default function WeekdayTracker() {
   const [weekdayDates, setWeekdayDates] = useState([]);
@@ -15,11 +15,29 @@ export default function WeekdayTracker() {
     minutes: 0,
     seconds: 0
   });
+  const [remainingWeekends, setRemainingWeekends] = useState({
+    saturdays: [],
+    sundays: []
+  });
 
   // Fade in animation on mount
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  const getDaysUntilLabel = (date) => {
+    const today = startOfToday();
+    const targetDate = startOfDay(date);
+    const daysUntil = differenceInDays(targetDate, today);
+
+    // Ensure we're not showing negative days
+    if (daysUntil < 0) return { text: "Today", color: "bg-green-100 text-green-700" };
+    if (daysUntil === 0) return { text: "Today", color: "bg-green-100 text-green-700" };
+    if (daysUntil === 1) return { text: "Tomorrow", color: "bg-blue-100 text-blue-700" };
+    if (daysUntil <= 3) return { text: `In ${daysUntil} days`, color: "bg-purple-100 text-purple-700" };
+    if (daysUntil <= 7) return { text: `In ${daysUntil} days`, color: "bg-orange-100 text-orange-700" };
+    return { text: `In ${daysUntil} days`, color: "bg-slate-100 text-slate-700" };
+  };
 
   // Calculate dates for the month
   useEffect(() => {
@@ -31,12 +49,24 @@ export default function WeekdayTracker() {
     const weekdays = allDays.filter((day) => !isWeekend(day));
     const passedWeekdays = weekdays.filter((day) => day <= today);
 
+    // Calculate remaining weekends with proper date comparison
+    const remainingSaturdays = allDays.filter(day =>
+      isSaturday(day) && (isAfter(startOfDay(day), startOfToday()) || isSameDay(day, today))
+    );
+    const remainingSundays = allDays.filter(day =>
+      isSunday(day) && (isAfter(startOfDay(day), startOfToday()) || isSameDay(day, today))
+    );
+
     setAllDates(allDays);
     setWeekdayDates(weekdays);
     setTotalWeekdays(weekdays.length);
     setWeekdaysTillToday(passedWeekdays.length);
     setRemainingWeekdays(weekdays.length - passedWeekdays.length);
-  }, []);
+    setRemainingWeekends({
+      saturdays: remainingSaturdays,
+      sundays: remainingSundays
+    });
+  }, [currentTime]);
 
   // Update time and countdown every second
   useEffect(() => {
@@ -44,18 +74,20 @@ export default function WeekdayTracker() {
       const now = new Date();
       setCurrentTime(now);
 
-      // Calculate next Saturday
+      // Calculate next Saturday with proper date handling
       let nextSat = new Date(now);
-      if (now.getDay() === 6) {
+      const currentDay = now.getDay();
+
+      if (currentDay === 6) {
         // If today is Saturday, get next Saturday
         nextSat = startOfDay(addDays(now, 7));
       } else {
-        // Calculate days until next Saturday
-        const daysUntilSaturday = (6 - now.getDay() + 7) % 7;
+        // Calculate days until next Saturday (0-6)
+        const daysUntilSaturday = (6 - currentDay + 7) % 7;
         nextSat = startOfDay(addDays(now, daysUntilSaturday));
       }
 
-      // Calculate time difference
+      // Calculate time difference using startOfDay for accurate day counting
       const totalSeconds = Math.max(0, differenceInSeconds(nextSat, now));
       const days = Math.floor(totalSeconds / (24 * 60 * 60));
       const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
@@ -78,7 +110,7 @@ export default function WeekdayTracker() {
 
     // Cleanup
     return () => clearInterval(timer);
-  }, []); // Empty dependency array since we want this to run continuously
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
@@ -150,6 +182,126 @@ export default function WeekdayTracker() {
                   </div>
                   <div className="text-xs sm:text-sm text-slate-600 mt-1">Seconds</div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Remaining Weekends Section */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8">
+            <div className="flex items-center gap-3 sm:gap-4 mb-6">
+              <span className="text-3xl sm:text-4xl bg-gradient-to-br from-orange-500 to-red-500 p-2 rounded-xl shadow-md animate-bounce-subtle">🌅</span>
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-800">
+                Remaining Weekends This Month
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Saturdays */}
+              <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-5 sm:p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-2xl sm:text-3xl">🌞</span>
+                  <h3 className="text-lg sm:text-xl font-semibold text-orange-800">
+                    Saturdays ({remainingWeekends.saturdays.length})
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  {remainingWeekends.saturdays.map((date, idx) => {
+                    const daysUntil = getDaysUntilLabel(date);
+                    return (
+                      <div
+                        key={idx}
+                        className={`
+                          flex items-center justify-between p-3 rounded-lg
+                          ${isToday(date) ? 'bg-orange-100' : 'bg-white/80'}
+                          transform transition-all duration-300 hover:scale-[1.02]
+                          relative overflow-hidden
+                        `}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl sm:text-2xl">🌞</span>
+                          <div>
+                            <div className="font-medium text-slate-700">
+                              {format(date, "EEEE")}
+                            </div>
+                            <div className="text-sm text-slate-500">
+                              {format(date, "MMMM d")}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                          <span className={`${daysUntil.color} text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap`}>
+                            {daysUntil.text}
+                          </span>
+                          {isToday(date) && (
+                            <span className="bg-orange-100 text-orange-600 text-xs font-medium px-2 py-1 rounded-full">
+                              Today
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Sundays */}
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 sm:p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-2xl sm:text-3xl">🌙</span>
+                  <h3 className="text-lg sm:text-xl font-semibold text-blue-800">
+                    Sundays ({remainingWeekends.sundays.length})
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  {remainingWeekends.sundays.map((date, idx) => {
+                    const daysUntil = getDaysUntilLabel(date);
+                    return (
+                      <div
+                        key={idx}
+                        className={`
+                          flex items-center justify-between p-3 rounded-lg
+                          ${isToday(date) ? 'bg-blue-100' : 'bg-white/80'}
+                          transform transition-all duration-300 hover:scale-[1.02]
+                          relative overflow-hidden
+                        `}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl sm:text-2xl">🌙</span>
+                          <div>
+                            <div className="font-medium text-slate-700">
+                              {format(date, "EEEE")}
+                            </div>
+                            <div className="text-sm text-slate-500">
+                              {format(date, "MMMM d")}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                          <span className={`${daysUntil.color} text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap`}>
+                            {daysUntil.text}
+                          </span>
+                          {isToday(date) && (
+                            <span className="bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded-full">
+                              Today
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Legend for countdown labels */}
+            <div className="mt-6 flex flex-wrap items-center gap-3 text-xs">
+              <span className="font-medium text-slate-600">Time indicators:</span>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full">Today</span>
+                <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Tomorrow</span>
+                <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full">Within 3 days</span>
+                <span className="bg-orange-100 text-orange-700 px-2 py-1 rounded-full">Within a week</span>
+                <span className="bg-slate-100 text-slate-700 px-2 py-1 rounded-full">More than a week</span>
               </div>
             </div>
           </div>
@@ -309,11 +461,11 @@ export default function WeekdayTracker() {
         @keyframes slideIn {
           from {
             opacity: 0;
-            transform: translateX(-20px);
+            transform: translateY(10px);
           }
           to {
             opacity: 1;
-            transform: translateX(0);
+            transform: translateY(0);
           }
         }
 
@@ -338,7 +490,7 @@ export default function WeekdayTracker() {
         }
 
         .animate-slide-in {
-          animation: slideIn 0.5s ease-out forwards;
+          animation: slideIn 0.3s ease-out forwards;
         }
 
         .animate-pulse-subtle {
