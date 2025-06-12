@@ -284,233 +284,295 @@ export default function WeekdayTracker() {
   const [isTopQuoteVisible, setIsTopQuoteVisible] = useState(true);
   const [activeWeek, setActiveWeek] = useState(0);
 
-  const programmerQuotes = [
-    {
-      text: "Code is like humor. When you have to explain it, it's bad.",
-      emoji: "😅"
-    },
-    {
-      text: "First, solve the problem. Then, write the code.",
-      emoji: "💡"
-    },
-    {
-      text: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-      emoji: "👨‍💻"
-    },
-    {
-      text: "The best way to predict the future is to implement it yourself.",
-      emoji: "🚀"
-    },
-    {
-      text: "Talk is cheap. Show me the code.",
-      emoji: "💻"
-    },
-    {
-      text: "Programming isn't about what you know; it's about what you can figure out.",
-      emoji: "🔍"
-    },
-    {
-      text: "The only way to learn a new programming language is by writing programs in it.",
-      emoji: "📚"
-    },
-    {
-      text: "Sometimes it pays to stay in bed on Monday, rather than spending the rest of the week debugging Monday's code.",
-      emoji: "😴"
-    },
-    {
-      text: "It's not a bug – it's an undocumented feature.",
-      emoji: "🐛"
-    },
-    {
-      text: "The most damaging phrase in the language is 'We've always done it this way.'",
-      emoji: "⚡"
-    },
-    {
-      text: "Good code is like a good joke: it needs no explanation.",
-      emoji: "😄"
-    },
-    {
-      text: "The best code is the code you don't have to write.",
-      emoji: "🎯"
-    },
-    {
-      text: "Programming is the art of telling another human what one wants the computer to do.",
-      emoji: "🎨"
-    },
-    {
-      text: "The only way to do great work is to love what you do.",
-      emoji: "❤️"
-    },
-    {
-      text: "Code never lies, comments sometimes do.",
-      emoji: "📝"
-    },
-    {
-      text: "The best error message is the one that never shows up.",
-      emoji: "✅"
-    },
-    {
-      text: "Programming is thinking, not typing.",
-      emoji: "🧠"
-    },
-    {
-      text: "The computer was born to solve problems that did not exist before.",
-      emoji: "💭"
-    },
-    {
-      text: "Good programmers write code that humans can understand.",
-      emoji: "👥"
-    },
-    {
-      text: "The best way to get a project done faster is to start sooner.",
-      emoji: "⏰"
-    },
-    {
-      text: "Code is read much more often than it is written.",
-      emoji: "📖"
-    },
-    {
-      text: "The best code is no code at all.",
-      emoji: "🎯"
-    },
-    {
-      text: "Programming is the closest thing we have to a superpower.",
-      emoji: "🦸‍♂️"
-    },
-    {
-      text: "The best way to learn is to teach.",
-      emoji: "👨‍🏫"
-    },
-    {
-      text: "Code is like a joke. If you have to explain it, it's bad.",
-      emoji: "😉"
-    }
-  ];
+  // const programmerQuotes = [
+  //   {
+  //     text: "Code is like humor. When you have to explain it, it's bad.",
+  //     emoji: "😅"
+  //   },
+  //   {
+  //     text: "First, solve the problem. Then, write the code.",
+  //     emoji: "💡"
+  //   },
+  //   {
+  //     text: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
+  //     emoji: "👨‍💻"
+  //   },
+  //   {
+  //     text: "The best way to predict the future is to implement it yourself.",
+  //     emoji: "🚀"
+  //   },
+  //   {
+  //     text: "Talk is cheap. Show me the code.",
+  //     emoji: "💻"
+  //   },
+  //   {
+  //     text: "Programming isn't about what you know; it's about what you can figure out.",
+  //     emoji: "🔍"
+  //   },
+  //   {
+  //     text: "The only way to learn a new programming language is by writing programs in it.",
+  //     emoji: "📚"
+  //   },
+  //   {
+  //     text: "Sometimes it pays to stay in bed on Monday, rather than spending the rest of the week debugging Monday's code.",
+  //     emoji: "😴"
+  //   },
+  //   {
+  //     text: "It's not a bug – it's an undocumented feature.",
+  //     emoji: "🐛"
+  //   },
+  //   {
+  //     text: "The most damaging phrase in the language is 'We've always done it this way.'",
+  //     emoji: "⚡"
+  //   },
+  //   {
+  //     text: "Good code is like a good joke: it needs no explanation.",
+  //     emoji: "😄"
+  //   },
+  //   {
+  //     text: "The best code is the code you don't have to write.",
+  //     emoji: "🎯"
+  //   },
+  //   {
+  //     text: "Programming is the art of telling another human what one wants the computer to do.",
+  //     emoji: "🎨"
+  //   },
+  //   {
+  //     text: "The only way to do great work is to love what you do.",
+  //     emoji: "❤️"
+  //   },
+  //   {
+  //     text: "Code never lies, comments sometimes do.",
+  //     emoji: "📝"
+  //   },
+  //   {
+  //     text: "The best error message is the one that never shows up.",
+  //     emoji: "✅"
+  //   },
+  //   {
+  //     text: "Programming is thinking, not typing.",
+  //     emoji: "🧠"
+  //   },
+  //   {
+  //     text: "The computer was born to solve problems that did not exist before.",
+  //     emoji: "💭"
+  //   },
+  //   {
+  //     text: "Good programmers write code that humans can understand.",
+  //     emoji: "👥"
+  //   },
+  //   {
+  //     text: "The best way to get a project done faster is to start sooner.",
+  //     emoji: "⏰"
+  //   },
+  //   {
+  //     text: "Code is read much more often than it is written.",
+  //     emoji: "📖"
+  //   },
+  //   {
+  //     text: "The best code is no code at all.",
+  //     emoji: "🎯"
+  //   },
+  //   {
+  //     text: "Programming is the closest thing we have to a superpower.",
+  //     emoji: "🦸‍♂️"
+  //   },
+  //   {
+  //     text: "The best way to learn is to teach.",
+  //     emoji: "👨‍🏫"
+  //   },
+  //   {
+  //     text: "Code is like a joke. If you have to explain it, it's bad.",
+  //     emoji: "😉"
+  //   }
+  // ];
 
-  const topQuotes = [
-    {
-      text: "Code with joy, debug with patience",
-      emoji: "✨"
-    },
-    {
-      text: "Every day is a coding adventure",
-      emoji: "🚀"
-    },
-    {
-      text: "Make it work, make it right, make it fast",
-      emoji: "⚡"
-    },
-    {
-      text: "Clean code is happy code",
-      emoji: "🎯"
-    },
-    {
-      text: "Code today, smile tomorrow",
-      emoji: "😊"
-    },
-    {
-      text: "Debugging is like being a detective",
-      emoji: "🔍"
-    },
-    {
-      text: "Keep coding, keep growing",
-      emoji: "🌱"
-    },
-    {
-      text: "Small steps, big results",
-      emoji: "👣"
-    },
-    {
-      text: "Think twice, code once",
-      emoji: "🧠"
-    },
-    {
-      text: "Code is poetry in motion",
-      emoji: "📝"
-    },
-    {
-      text: "Every bug is a feature in disguise",
-      emoji: "🦋"
-    },
-    {
-      text: "Code smarter, not harder",
-      emoji: "💪"
-    },
-    {
-      text: "The best code is the code you don't write",
-      emoji: "🎨"
-    },
-    {
-      text: "Debugging is an art form",
-      emoji: "🎭"
-    },
-    {
-      text: "Code with confidence, test with care",
-      emoji: "🛡️"
-    },
-    {
-      text: "Innovation starts with a single line of code",
-      emoji: "💫"
-    },
-    {
-      text: "Code is the language of possibilities",
-      emoji: "🌐"
-    },
-    {
-      text: "Every function tells a story",
-      emoji: "📚"
-    },
-    {
-      text: "Code with purpose, build with passion",
-      emoji: "🎯"
-    },
-    {
-      text: "The best code comes from happy developers",
-      emoji: "😊"
-    },
-    {
-      text: "Debug with patience, code with love",
-      emoji: "❤️"
-    },
-    {
-      text: "Every commit is a step forward",
-      emoji: "👣"
-    },
-    {
-      text: "Code is the bridge between ideas and reality",
-      emoji: "🌉"
-    },
-    {
-      text: "Programming is a journey, not a destination",
-      emoji: "🗺️"
-    },
-    {
-      text: "The best code is written with a smile",
-      emoji: "😄"
-    },
-    {
-      text: "Code is the art of creating possibilities",
-      emoji: "🎨"
-    },
-    {
-      text: "Every line of code is a chance to make a difference",
-      emoji: "✨"
-    },
-    {
-      text: "Code with clarity, build with confidence",
-      emoji: "🔮"
-    },
-    {
-      text: "The best code is like a good story - it flows naturally",
-      emoji: "📖"
-    },
-    {
-      text: "Programming is the art of turning coffee into code",
-      emoji: "☕"
-    }
-  ];
+  // const topQuotes = [
+  //   {
+  //     text: "Code with joy, debug with patience",
+  //     emoji: "✨"
+  //   },
+  //   {
+  //     text: "Every day is a coding adventure",
+  //     emoji: "🚀"
+  //   },
+  //   {
+  //     text: "Make it work, make it right, make it fast",
+  //     emoji: "⚡"
+  //   },
+  //   {
+  //     text: "Clean code is happy code",
+  //     emoji: "🎯"
+  //   },
+  //   {
+  //     text: "Code today, smile tomorrow",
+  //     emoji: "😊"
+  //   },
+  //   {
+  //     text: "Debugging is like being a detective",
+  //     emoji: "🔍"
+  //   },
+  //   {
+  //     text: "Keep coding, keep growing",
+  //     emoji: "🌱"
+  //   },
+  //   {
+  //     text: "Small steps, big results",
+  //     emoji: "👣"
+  //   },
+  //   {
+  //     text: "Think twice, code once",
+  //     emoji: "🧠"
+  //   },
+  //   {
+  //     text: "Code is poetry in motion",
+  //     emoji: "📝"
+  //   },
+  //   {
+  //     text: "Every bug is a feature in disguise",
+  //     emoji: "🦋"
+  //   },
+  //   {
+  //     text: "Code smarter, not harder",
+  //     emoji: "💪"
+  //   },
+  //   {
+  //     text: "The best code is the code you don't write",
+  //     emoji: "🎨"
+  //   },
+  //   {
+  //     text: "Debugging is an art form",
+  //     emoji: "🎭"
+  //   },
+  //   {
+  //     text: "Code with confidence, test with care",
+  //     emoji: "🛡️"
+  //   },
+  //   {
+  //     text: "Innovation starts with a single line of code",
+  //     emoji: "💫"
+  //   },
+  //   {
+  //     text: "Code is the language of possibilities",
+  //     emoji: "🌐"
+  //   },
+  //   {
+  //     text: "Every function tells a story",
+  //     emoji: "📚"
+  //   },
+  //   {
+  //     text: "Code with purpose, build with passion",
+  //     emoji: "🎯"
+  //   },
+  //   {
+  //     text: "The best code comes from happy developers",
+  //     emoji: "😊"
+  //   },
+  //   {
+  //     text: "Debug with patience, code with love",
+  //     emoji: "❤️"
+  //   },
+  //   {
+  //     text: "Every commit is a step forward",
+  //     emoji: "👣"
+  //   },
+  //   {
+  //     text: "Code is the bridge between ideas and reality",
+  //     emoji: "🌉"
+  //   },
+  //   {
+  //     text: "Programming is a journey, not a destination",
+  //     emoji: "🗺️"
+  //   },
+  //   {
+  //     text: "The best code is written with a smile",
+  //     emoji: "😄"
+  //   },
+  //   {
+  //     text: "Code is the art of creating possibilities",
+  //     emoji: "🎨"
+  //   },
+  //   {
+  //     text: "Every line of code is a chance to make a difference",
+  //     emoji: "✨"
+  //   },
+  //   {
+  //     text: "Code with clarity, build with confidence",
+  //     emoji: "🔮"
+  //   },
+  //   {
+  //     text: "The best code is like a good story - it flows naturally",
+  //     emoji: "📖"
+  //   },
+  //   {
+  //     text: "Programming is the art of turning coffee into code",
+  //     emoji: "☕"
+  //   }
+  // ];
 
   // Rotate quotes every 4 seconds with fade effect
+  const topQuotes = [
+    { text: "Code likhna easy nahi re bhai, Brijesh bhai kar ke dikhata hai!", emoji: "💻" },
+    { text: "Har din naya bug, har raat Brijesh bhai ka jugaad!", emoji: "🔧" },
+    { text: "Pehle chalana, phir sudharna — Brijesh bhai ka coding mantra!", emoji: "⚡" },
+    { text: "Clean code matlab Brijesh bhai ki pehchaan!", emoji: "🧼" },
+    { text: "Aaj code kar, kal Brijesh bhai ke naam ka danka bajega!", emoji: "😎" },
+    { text: "Debugging detective ka kaam hai — Brijesh bhai full CID mode mein!", emoji: "🔍" },
+    { text: "Code likhte ja, growth apne aap ho jaayegi — Brijesh bhai ka funda!", emoji: "🌱" },
+    { text: "Chhoti chhoti commits, bade bade kaam — Brijesh bhai style!", emoji: "👣" },
+    { text: "Soch samajh ke likh bhai, code ek baar likhna hota hai!", emoji: "🧠" },
+    { text: "Code toh poetry hai re, aur Brijesh bhai toh asli shayar!", emoji: "📝" },
+    { text: "Bug kya hota hai? Brijesh bhai usko feature bana deta hai!", emoji: "🦋" },
+    { text: "Code tez nahi, smart likh bhai! Brijesh bhai bolta hai!", emoji: "💪" },
+    { text: "Jo code nahi likha, wahi best hota hai — Brijesh bhai ka rule!", emoji: "🎨" },
+    { text: "Debugging bhi art hai, aur Brijesh bhai artist!", emoji: "🎭" },
+    { text: "Confidence se code likh, testing Brijesh bhai sambhalega!", emoji: "🛡️" },
+    { text: "Ek line ka code bhi game badal deta hai — Brijesh bhai proof hai!", emoji: "💫" },
+    { text: "Code matlab naye ideas ka magic — Brijesh bhai jaisa coder chahiye!", emoji: "🌐" },
+    { text: "Har function ek kahani hai — Brijesh bhai ki likhi hui!", emoji: "📚" },
+    { text: "Dil se code karo, Brijesh bhai jaisa build karo!", emoji: "🔥" },
+    { text: "Happy developer = solid code. Brijesh bhai example hai!", emoji: "😊" },
+    { text: "Pyaar se likho code, sab bugs bhaag jaayenge re!", emoji: "❤️" },
+    { text: "Har commit ek kadam aage — Brijesh bhai ke jaisa progress!", emoji: "👣" },
+    { text: "Code idea ko reality banata hai — Brijesh bhai ka roz ka kaam!", emoji: "🌉" },
+    { text: "Programming ek journey hai, destination nahi — Brijesh bhai hamesha on road!", emoji: "🗺️" },
+    { text: "Code likhte waqt Brijesh bhai hamesha smile karta hai!", emoji: "😄" },
+    { text: "Possibility ka doosra naam code hai — Brijesh bhai ke liye!", emoji: "🎨" },
+    { text: "Har line mein Brijesh bhai ka dum chhupa hai!", emoji: "✨" },
+    { text: "Seedhe aur clean likho, Brijesh bhai style mein samajhne mein maza aata hai!", emoji: "🔮" },
+    { text: "Bhai, Brijesh bhai ka likha code toh ek novel jaise flow karta hai!", emoji: "📖" },
+    { text: "Programming? Brijesh bhai ke liye toh coffee ka dusra naam hai!", emoji: "☕" }
+  ];
+
+  const programmerQuotes = [
+    { text: "Code agar samjhana pad gaya na bhai, toh joke hi samajh le usko!", emoji: "😅" },
+    { text: "Pehle problem ka dahi karo, fir code ka tadka maaro!", emoji: "💡" },
+    { text: "Machine ke liye toh koi bhi likh lega, Brijesh bhai insaan ke liye likhta hai!", emoji: "👨‍💻" },
+    { text: "Future banana hai? Khud hi code likh re bhai!", emoji: "🚀" },
+    { text: "Bakwaas band, code dikhana start kar!", emoji: "💻" },
+    { text: "Jo nahi aata, wahi seekhna padta hai. Jugaadu coder banna re!", emoji: "🔍" },
+    { text: "Naya language? Bas likhne lag ja, seekh jayega!", emoji: "📚" },
+    { text: "Monday ko chill kar le bhai, warna poora hafta code ka dard rahega!", emoji: "😴" },
+    { text: "Bug nahi re baba, undocumented feature hai!", emoji: "🐛" },
+    { text: "'Hamesha aise hi kiya hai' — sabse badi barbaadi!", emoji: "⚡" },
+    { text: "Acha code aur acha joke — dono explain nahi hote bhai!", emoji: "😄" },
+    { text: "Jo code likhna hi na pade, wahi best code hota hai!", emoji: "🎯" },
+    { text: "Code matlab doosre ko bolna, 'boss, system ko yeh karwana hai!'", emoji: "🎨" },
+    { text: "Coding mein mazza tabhi aata hai, jab dil se karein — Brijesh bhai style!", emoji: "❤️" },
+    { text: "Code kabhi jhooth nahi bolta, par comments? Kabhi kabhi kaafi confusing!", emoji: "📝" },
+    { text: "Best error wahi hota hai jo kabhi dikhta hi nahi!", emoji: "✅" },
+    { text: "Soch zyada, likhna kam — asli programmer ka style!", emoji: "🧠" },
+    { text: "Computer ki dikkat kya hai? Problem bana deta hai jahan problem hoti hi nahi!", emoji: "💭" },
+    { text: "Code samjhe insaan, tabhi toh bole Brijesh bhai, 'yeh hai asli kaam!'", emoji: "👥" },
+    { text: "Tez kaam chahiye? Jaldi shuru kar bhai!", emoji: "⏰" },
+    { text: "Code likhne se zyada, padhe jaata hai — samjhdar coder ban bhai!", emoji: "📖" },
+    { text: "Best code? Jo likhna hi na pade!", emoji: "🎯" },
+    { text: "Programming matlab superpower — Brijesh bhai ka asli weapon!", emoji: "🦸‍♂️" },
+    { text: "Sikhna hai? Dusre ko sikha de, khud hi pro ban jayega!", emoji: "👨‍🏫" },
+    { text: "Code aur joke mein fark nahi — dono samjhane lage toh bekaar hai!", emoji: "😉" }
+  ];
+
+
   useEffect(() => {
     const quoteInterval = setInterval(() => {
       setIsQuoteVisible(false);
@@ -518,7 +580,7 @@ export default function WeekdayTracker() {
         setCurrentQuote((prev) => (prev + 1) % programmerQuotes.length);
         setIsQuoteVisible(true);
       }, 500); // Half second for fade out
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(quoteInterval);
   }, []);
@@ -531,7 +593,7 @@ export default function WeekdayTracker() {
         setCurrentTopQuote((prev) => (prev + 1) % topQuotes.length);
         setIsTopQuoteVisible(true);
       }, 500);
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(topQuoteInterval);
   }, []);
@@ -1467,6 +1529,7 @@ export default function WeekdayTracker() {
                     `}>
                       <div className="relative px-8 py-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-2xl backdrop-blur-sm border border-slate-700/50">
                         <div className="flex flex-col items-center gap-3">
+                        <span className="text-2xl">{programmerQuotes[currentQuote].emoji}</span>
                           <p className="text-lg sm:text-xl text-slate-200 italic">
                             {programmerQuotes[currentQuote].text}
                           </p>
