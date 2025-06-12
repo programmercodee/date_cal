@@ -1164,15 +1164,16 @@ export default function WeekdayTracker() {
                               ${!isSelectedMonth ? 'opacity-50' : ''}
                               ${isWeekendDay
                                 ? isPastDay
-                                  ? 'bg-red-100/50'
-                                  : 'bg-red-50 hover:bg-red-100/50'
+                                  ? 'bg-red-100/50 ring-2 ring-red-200'
+                                  : 'bg-red-50 hover:bg-red-100/50 ring-2 ring-red-100'
                                 : isPastDay
-                                  ? 'bg-slate-100/50'
-                                  : 'bg-slate-50 hover:bg-slate-100/50'
+                                  ? 'bg-slate-100/50 ring-2 ring-slate-200'
+                                  : 'bg-slate-50 hover:bg-slate-100/50 ring-2 ring-slate-100'
                               }
                               ${isCurrentDay ? 'ring-2 ring-blue-500 bg-blue-50' : ''}
                               ${isPastDay ? 'opacity-75' : ''}
                               transition-all duration-200
+                              hover:ring-opacity-100
                             `}
                           >
                             <div className="flex items-center justify-between">
