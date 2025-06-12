@@ -1,6 +1,113 @@
 import { useState, useEffect } from "react";
 import { eachDayOfInterval, isWeekend, format, getMonth, getYear, isToday, isSaturday, isSunday, addDays, differenceInSeconds, differenceInDays, differenceInHours, differenceInMinutes, startOfDay, isAfter, isSameDay, startOfToday } from "date-fns";
 
+const AnimatedClock = ({ size = 16 }) => {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const hours = time.getHours() % 12;
+  const minutes = time.getMinutes();
+  const seconds = time.getSeconds();
+
+  const hourDegrees = (hours * 30) + (minutes * 0.5); // 30 degrees per hour, 0.5 degrees per minute
+  const minuteDegrees = minutes * 6; // 6 degrees per minute
+  const secondDegrees = seconds * 6; // 6 degrees per second
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className="text-blue-500"
+      style={{ transform: 'rotate(-90deg)' }}
+    >
+      {/* Clock face */}
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        className="opacity-20"
+      />
+      {/* Hour markers */}
+      {[...Array(12)].map((_, i) => (
+        <line
+          key={i}
+          x1="12"
+          y1="2"
+          x2="12"
+          y2="3"
+          stroke="currentColor"
+          strokeWidth="1"
+          className="opacity-40"
+          style={{
+            transform: `rotate(${i * 30}deg)`,
+            transformOrigin: '12px 12px'
+          }}
+        />
+      ))}
+      {/* Hour hand */}
+      <line
+        x1="12"
+        y1="12"
+        x2="12"
+        y2="6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        style={{
+          transform: `rotate(${hourDegrees}deg)`,
+          transformOrigin: '12px 12px'
+        }}
+      />
+      {/* Minute hand */}
+      <line
+        x1="12"
+        y1="12"
+        x2="12"
+        y2="4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        style={{
+          transform: `rotate(${minuteDegrees}deg)`,
+          transformOrigin: '12px 12px'
+        }}
+      />
+      {/* Second hand */}
+      <line
+        x1="12"
+        y1="12"
+        x2="12"
+        y2="3"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeLinecap="round"
+        className="text-blue-600"
+        style={{
+          transform: `rotate(${secondDegrees}deg)`,
+          transformOrigin: '12px 12px'
+        }}
+      />
+      {/* Center dot */}
+      <circle
+        cx="12"
+        cy="12"
+        r="1"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
+
 export default function WeekdayTracker() {
   const [weekdayDates, setWeekdayDates] = useState([]);
   const [allDates, setAllDates] = useState([]);
@@ -533,10 +640,28 @@ export default function WeekdayTracker() {
                     </div>
                   </div>
                 </div>
-                <div className="w-full sm:w-auto bg-gradient-to-br from-slate-100 to-blue-50 px-6 py-4 rounded-xl shadow-md flex items-center justify-center sm:justify-end gap-4 border border-blue-100/50 hover:shadow-lg transition-all duration-300">
-                  <span className="text-xl sm:text-2xl font-mono font-semibold text-slate-700 animate-pulse-subtle">
-                    {format(currentTime, "hh:mm:ss a")}
-                  </span>
+                <div className="w-full sm:w-auto">
+                  <div className="bg-gradient-to-br from-slate-100 to-blue-50 px-6 py-4 rounded-xl shadow-md border border-blue-100/50 hover:shadow-lg transition-all duration-300">
+                    <div className="flex flex-col items-center sm:items-end gap-1">
+                      <div className="flex items-center gap-2 text-sm text-slate-500 font-medium">
+                        <span className="flex items-center gap-1">
+                          <AnimatedClock size={16} />
+                          Current Time
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl sm:text-2xl font-mono font-semibold text-slate-700 animate-pulse-subtle">
+                          {format(currentTime, "hh:mm:ss")}
+                        </span>
+                        <span className="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                          {format(currentTime, "a")}
+                        </span>
+                      </div>
+                      <div className="text-xs text-slate-500 font-medium">
+                        {format(currentTime, "EEEE, MMMM d, yyyy")}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
