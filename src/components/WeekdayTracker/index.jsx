@@ -650,6 +650,24 @@ export default function WeekdayTracker() {
     return options;
   };
 
+  // Function to count weekends in a month
+  const getWeekendCount = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    let saturdays = 0;
+    let sundays = 0;
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const currentDate = new Date(year, month, day);
+      const dayOfWeek = currentDate.getDay();
+      if (dayOfWeek === 0) sundays++;
+      if (dayOfWeek === 6) saturdays++;
+    }
+
+    return { saturdays, sundays, total: saturdays + sundays };
+  };
+
   // Update the useEffect for calculating dates to use selectedMonth
   useEffect(() => {
     const startOfMonth = new Date(getYear(selectedMonth), getMonth(selectedMonth), 1);
@@ -1219,58 +1237,87 @@ export default function WeekdayTracker() {
 
                 {/* Stats Grid - Enhanced with better gradients and hover effects */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                  {[
-                    {
-                      icon: "📅",
-                      value: totalWeekdays,
-                      title: "Working Days This Month",
-                      description: `Total number of weekdays in ${format(currentTime, "MMMM")}`,
-                      gradient: "from-blue-500 to-blue-600",
-                      textGradient: "from-blue-600 to-blue-700",
-                      delay: "0.1s"
-                    },
-                    {
-                      icon: "✅",
-                      value: weekdaysTillToday,
-                      title: "Days Completed",
-                      description: "Working days that have passed",
-                      gradient: "from-emerald-500 to-emerald-600",
-                      textGradient: "from-emerald-600 to-emerald-700",
-                      delay: "0.2s"
-                    },
-                    {
-                      icon: "⏳",
-                      value: remainingWeekdays,
-                      title: "Days Left",
-                      description: "Working days remaining this month",
-                      gradient: "from-indigo-500 to-indigo-600",
-                      textGradient: "from-indigo-600 to-indigo-700",
-                      delay: "0.3s"
-                    }
-                  ].map((stat, index) => (
-                    <div
-                      key={index}
-                      className={`bg-gradient-to-br from-white/95 to-${stat.gradient.split('-')[1]}-50/50 backdrop-blur-sm rounded-2xl shadow-lg p-5 sm:p-6 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-slide-up group border border-${stat.gradient.split('-')[1]}-100/50`}
-                      style={{ animationDelay: stat.delay }}
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3 sm:gap-4">
-                          <span className={`text-3xl sm:text-4xl bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg ring-2 ring-${stat.gradient.split('-')[1]}-100 animate-bounce-subtle`}>
-                            {stat.icon}
-                          </span>
-                          <span className={`text-3xl sm:text-4xl font-bold bg-gradient-to-r ${stat.textGradient} bg-clip-text text-transparent`}>
-                            {stat.value}
-                          </span>
+                  {(() => {
+                    const { saturdays, sundays, total } = getWeekendCount(selectedMonth);
+                    return [
+                      {
+                        icon: "📅",
+                        value: totalWeekdays,
+                        title: "Working Days This Month",
+                        description: `Total number of weekdays in ${format(currentTime, "MMMM")}`,
+                        gradient: "from-blue-500 to-blue-600",
+                        textGradient: "from-blue-600 to-blue-700",
+                        delay: "0.1s"
+                      },
+                      {
+                        icon: "✅",
+                        value: weekdaysTillToday,
+                        title: "Days Completed",
+                        description: "Working days that have passed",
+                        gradient: "from-emerald-500 to-emerald-600",
+                        textGradient: "from-emerald-600 to-emerald-700",
+                        delay: "0.2s"
+                      },
+
+                      {
+                        icon: "⏳",
+                        value: remainingWeekdays,
+                        title: "Days Left",
+                        description: "Working days remaining this month",
+                        gradient: "from-teal-500 to-teal-600",
+                        textGradient: "from-teal-600 to-teal-700",
+                        delay: "0.3s"
+                      },
+                      {
+                        icon: "🎯",
+                        value: total,
+                        title: "Weekend Stats",
+                        description: (
+                          <div className="mt-2 grid grid-cols-2 gap-2">
+                            <div className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 px-2 py-1.5 rounded-lg border border-blue-100">
+                              <span className="text-base">😎</span>
+                              <span className="text-sm font-medium text-slate-700">Sat: {saturdays}</span>
+                            </div>
+                            <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-pink-50 px-2 py-1.5 rounded-lg border border-purple-100">
+                              <span className="text-base">☕</span>
+                              <span className="text-sm font-medium text-slate-700">Sun: {sundays}</span>
+                            </div>
+                          </div>
+                        ),
+                        gradient: "from-indigo-500 to-purple-500",
+                        textGradient: "from-indigo-600 to-purple-600",
+                        delay: "0.4s"
+                      }
+                      
+                    ].map((stat, index) => (
+                      <div
+                        key={index}
+                        className={`bg-gradient-to-br from-white/95 to-${stat.gradient.split('-')[1]}-50/50 backdrop-blur-sm rounded-2xl shadow-lg p-5 sm:p-6 transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-slide-up group border border-${stat.gradient.split('-')[1]}-100/50`}
+                        style={{ animationDelay: stat.delay }}
+                      >
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3 sm:gap-4">
+                            <span className={`text-3xl sm:text-4xl bg-gradient-to-br ${stat.gradient} p-3 rounded-xl shadow-lg ring-2 ring-${stat.gradient.split('-')[1]}-100 animate-bounce-subtle`}>
+                              {stat.icon}
+                            </span>
+                            <span className={`text-3xl sm:text-4xl font-bold bg-gradient-to-r ${stat.textGradient} bg-clip-text text-transparent`}>
+                              {stat.value}
+                            </span>
+                          </div>
                         </div>
+                        <h3 className={`text-lg sm:text-xl font-medium bg-gradient-to-r ${stat.textGradient} bg-clip-text text-transparent group-hover:scale-105 transition-all`}>
+                          {stat.title}
+                        </h3>
+                        {typeof stat.description === 'string' ? (
+                          <p className="text-slate-500 mt-2 text-sm">
+                            {stat.description}
+                          </p>
+                        ) : (
+                          stat.description
+                        )}
                       </div>
-                      <h3 className={`text-lg sm:text-xl font-medium bg-gradient-to-r ${stat.textGradient} bg-clip-text text-transparent group-hover:scale-105 transition-all`}>
-                        {stat.title}
-                      </h3>
-                      <p className="text-slate-500 mt-2 text-sm">
-                        {stat.description}
-                      </p>
-                    </div>
-                  ))}
+                    ));
+                  })()}
                 </div>
 
                 {/* Calendar Section */}
@@ -1529,7 +1576,7 @@ export default function WeekdayTracker() {
                     `}>
                       <div className="relative px-8 py-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-2xl backdrop-blur-sm border border-slate-700/50">
                         <div className="flex flex-col items-center gap-3">
-                        <span className="text-2xl">{programmerQuotes[currentQuote].emoji}</span>
+                          <span className="text-2xl">{programmerQuotes[currentQuote].emoji}</span>
                           <p className="text-lg sm:text-xl text-slate-200 italic">
                             {programmerQuotes[currentQuote].text}
                           </p>
