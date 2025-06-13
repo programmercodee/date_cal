@@ -657,15 +657,34 @@ export default function WeekdayTracker() {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     let saturdays = 0;
     let sundays = 0;
+    let pastSaturdays = 0;
+    let pastSundays = 0;
+    const today = new Date();
 
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(year, month, day);
       const dayOfWeek = currentDate.getDay();
-      if (dayOfWeek === 0) sundays++;
-      if (dayOfWeek === 6) saturdays++;
+      if (dayOfWeek === 0) {
+        sundays++;
+        if (currentDate < today) pastSundays++;
+      }
+      if (dayOfWeek === 6) {
+        saturdays++;
+        if (currentDate < today) pastSaturdays++;
+      }
     }
 
-    return { saturdays, sundays, total: saturdays + sundays };
+    return {
+      saturdays,
+      sundays,
+      total: saturdays + sundays,
+      pastSaturdays,
+      pastSundays,
+      pastTotal: pastSaturdays + pastSundays,
+      remainingSaturdays: saturdays - pastSaturdays,
+      remainingSundays: sundays - pastSundays,
+      remainingTotal: (saturdays + sundays) - (pastSaturdays + pastSundays)
+    };
   };
 
   // Update the useEffect for calculating dates to use selectedMonth
@@ -1238,7 +1257,18 @@ export default function WeekdayTracker() {
                 {/* Stats Grid - Enhanced with better gradients and hover effects */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                   {(() => {
-                    const { saturdays, sundays, total } = getWeekendCount(selectedMonth);
+                    const {
+                      saturdays,
+                      sundays,
+                      total,
+                      pastSaturdays,
+                      pastSundays,
+                      pastTotal,
+                      remainingSaturdays,
+                      remainingSundays,
+                      remainingTotal
+                    } = getWeekendCount(selectedMonth);
+
                     return [
                       {
                         icon: "📅",
@@ -1258,7 +1288,6 @@ export default function WeekdayTracker() {
                         textGradient: "from-emerald-600 to-emerald-700",
                         delay: "0.2s"
                       },
-
                       {
                         icon: "⏳",
                         value: remainingWeekdays,
@@ -1273,14 +1302,26 @@ export default function WeekdayTracker() {
                         value: total,
                         title: "Weekend Stats",
                         description: (
-                          <div className="mt-2 grid grid-cols-2 gap-2">
-                            <div className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 px-2 py-1.5 rounded-lg border border-blue-100">
-                              <span className="text-base">😎</span>
-                              <span className="text-sm font-medium text-slate-700">Sat: {saturdays}</span>
+                          <div className="mt-2 space-y-3">
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 px-2 py-1.5 rounded-lg border border-blue-100">
+                                <span className="text-base">😎</span>
+                                <div className="flex flex-col">
+                                  <span className="text-sm font-medium text-slate-700">Sat: {saturdays}</span>
+                                  <span className="text-xs text-slate-500">Past: {pastSaturdays} | Left: {remainingSaturdays}</span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-pink-50 px-2 py-1.5 rounded-lg border border-purple-100">
+                                <span className="text-base">☕</span>
+                                <div className="flex flex-col">
+                                  <span className="text-sm font-medium text-slate-700">Sun: {sundays}</span>
+                                  <span className="text-xs text-slate-500">Past: {pastSundays} | Left: {remainingSundays}</span>
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-pink-50 px-2 py-1.5 rounded-lg border border-purple-100">
-                              <span className="text-base">☕</span>
-                              <span className="text-sm font-medium text-slate-700">Sun: {sundays}</span>
+                            <div className="flex items-center justify-between text-xs px-1">
+                              <span className="text-emerald-600 font-medium">Past: {pastTotal} weekends</span>
+                              <span className="text-indigo-600 font-medium">Left: {remainingTotal} weekends</span>
                             </div>
                           </div>
                         ),
@@ -1288,7 +1329,6 @@ export default function WeekdayTracker() {
                         textGradient: "from-indigo-600 to-purple-600",
                         delay: "0.4s"
                       }
-                      
                     ].map((stat, index) => (
                       <div
                         key={index}
