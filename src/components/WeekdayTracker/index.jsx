@@ -283,234 +283,9 @@ export default function WeekdayTracker() {
   const [currentTopQuote, setCurrentTopQuote] = useState(0);
   const [isTopQuoteVisible, setIsTopQuoteVisible] = useState(true);
   const [activeWeek, setActiveWeek] = useState(0);
+  const [isWeekendMode, setIsWeekendMode] = useState(false);
 
-  // const programmerQuotes = [
-  //   {
-  //     text: "Code is like humor. When you have to explain it, it's bad.",
-  //     emoji: "😅"
-  //   },
-  //   {
-  //     text: "First, solve the problem. Then, write the code.",
-  //     emoji: "💡"
-  //   },
-  //   {
-  //     text: "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-  //     emoji: "👨‍💻"
-  //   },
-  //   {
-  //     text: "The best way to predict the future is to implement it yourself.",
-  //     emoji: "🚀"
-  //   },
-  //   {
-  //     text: "Talk is cheap. Show me the code.",
-  //     emoji: "💻"
-  //   },
-  //   {
-  //     text: "Programming isn't about what you know; it's about what you can figure out.",
-  //     emoji: "🔍"
-  //   },
-  //   {
-  //     text: "The only way to learn a new programming language is by writing programs in it.",
-  //     emoji: "📚"
-  //   },
-  //   {
-  //     text: "Sometimes it pays to stay in bed on Monday, rather than spending the rest of the week debugging Monday's code.",
-  //     emoji: "😴"
-  //   },
-  //   {
-  //     text: "It's not a bug – it's an undocumented feature.",
-  //     emoji: "🐛"
-  //   },
-  //   {
-  //     text: "The most damaging phrase in the language is 'We've always done it this way.'",
-  //     emoji: "⚡"
-  //   },
-  //   {
-  //     text: "Good code is like a good joke: it needs no explanation.",
-  //     emoji: "😄"
-  //   },
-  //   {
-  //     text: "The best code is the code you don't have to write.",
-  //     emoji: "🎯"
-  //   },
-  //   {
-  //     text: "Programming is the art of telling another human what one wants the computer to do.",
-  //     emoji: "🎨"
-  //   },
-  //   {
-  //     text: "The only way to do great work is to love what you do.",
-  //     emoji: "❤️"
-  //   },
-  //   {
-  //     text: "Code never lies, comments sometimes do.",
-  //     emoji: "📝"
-  //   },
-  //   {
-  //     text: "The best error message is the one that never shows up.",
-  //     emoji: "✅"
-  //   },
-  //   {
-  //     text: "Programming is thinking, not typing.",
-  //     emoji: "🧠"
-  //   },
-  //   {
-  //     text: "The computer was born to solve problems that did not exist before.",
-  //     emoji: "💭"
-  //   },
-  //   {
-  //     text: "Good programmers write code that humans can understand.",
-  //     emoji: "👥"
-  //   },
-  //   {
-  //     text: "The best way to get a project done faster is to start sooner.",
-  //     emoji: "⏰"
-  //   },
-  //   {
-  //     text: "Code is read much more often than it is written.",
-  //     emoji: "📖"
-  //   },
-  //   {
-  //     text: "The best code is no code at all.",
-  //     emoji: "🎯"
-  //   },
-  //   {
-  //     text: "Programming is the closest thing we have to a superpower.",
-  //     emoji: "🦸‍♂️"
-  //   },
-  //   {
-  //     text: "The best way to learn is to teach.",
-  //     emoji: "👨‍🏫"
-  //   },
-  //   {
-  //     text: "Code is like a joke. If you have to explain it, it's bad.",
-  //     emoji: "😉"
-  //   }
-  // ];
-
-  // const topQuotes = [
-  //   {
-  //     text: "Code with joy, debug with patience",
-  //     emoji: "✨"
-  //   },
-  //   {
-  //     text: "Every day is a coding adventure",
-  //     emoji: "🚀"
-  //   },
-  //   {
-  //     text: "Make it work, make it right, make it fast",
-  //     emoji: "⚡"
-  //   },
-  //   {
-  //     text: "Clean code is happy code",
-  //     emoji: "🎯"
-  //   },
-  //   {
-  //     text: "Code today, smile tomorrow",
-  //     emoji: "😊"
-  //   },
-  //   {
-  //     text: "Debugging is like being a detective",
-  //     emoji: "🔍"
-  //   },
-  //   {
-  //     text: "Keep coding, keep growing",
-  //     emoji: "🌱"
-  //   },
-  //   {
-  //     text: "Small steps, big results",
-  //     emoji: "👣"
-  //   },
-  //   {
-  //     text: "Think twice, code once",
-  //     emoji: "🧠"
-  //   },
-  //   {
-  //     text: "Code is poetry in motion",
-  //     emoji: "📝"
-  //   },
-  //   {
-  //     text: "Every bug is a feature in disguise",
-  //     emoji: "🦋"
-  //   },
-  //   {
-  //     text: "Code smarter, not harder",
-  //     emoji: "💪"
-  //   },
-  //   {
-  //     text: "The best code is the code you don't write",
-  //     emoji: "🎨"
-  //   },
-  //   {
-  //     text: "Debugging is an art form",
-  //     emoji: "🎭"
-  //   },
-  //   {
-  //     text: "Code with confidence, test with care",
-  //     emoji: "🛡️"
-  //   },
-  //   {
-  //     text: "Innovation starts with a single line of code",
-  //     emoji: "💫"
-  //   },
-  //   {
-  //     text: "Code is the language of possibilities",
-  //     emoji: "🌐"
-  //   },
-  //   {
-  //     text: "Every function tells a story",
-  //     emoji: "📚"
-  //   },
-  //   {
-  //     text: "Code with purpose, build with passion",
-  //     emoji: "🎯"
-  //   },
-  //   {
-  //     text: "The best code comes from happy developers",
-  //     emoji: "😊"
-  //   },
-  //   {
-  //     text: "Debug with patience, code with love",
-  //     emoji: "❤️"
-  //   },
-  //   {
-  //     text: "Every commit is a step forward",
-  //     emoji: "👣"
-  //   },
-  //   {
-  //     text: "Code is the bridge between ideas and reality",
-  //     emoji: "🌉"
-  //   },
-  //   {
-  //     text: "Programming is a journey, not a destination",
-  //     emoji: "🗺️"
-  //   },
-  //   {
-  //     text: "The best code is written with a smile",
-  //     emoji: "😄"
-  //   },
-  //   {
-  //     text: "Code is the art of creating possibilities",
-  //     emoji: "🎨"
-  //   },
-  //   {
-  //     text: "Every line of code is a chance to make a difference",
-  //     emoji: "✨"
-  //   },
-  //   {
-  //     text: "Code with clarity, build with confidence",
-  //     emoji: "🔮"
-  //   },
-  //   {
-  //     text: "The best code is like a good story - it flows naturally",
-  //     emoji: "📖"
-  //   },
-  //   {
-  //     text: "Programming is the art of turning coffee into code",
-  //     emoji: "☕"
-  //   }
-  // ];
-
-  // Rotate quotes every 4 seconds with fade effect
+  // Add topQuotes array
   const topQuotes = [
     { text: "Code likhna easy nahi re bhai, Brijesh bhai kar ke dikhata hai!", emoji: "💻" },
     { text: "Har din naya bug, har raat Brijesh bhai ka jugaad!", emoji: "🔧" },
@@ -521,29 +296,10 @@ export default function WeekdayTracker() {
     { text: "Code likhte ja, growth apne aap ho jaayegi — Brijesh bhai ka funda!", emoji: "🌱" },
     { text: "Chhoti chhoti commits, bade bade kaam — Brijesh bhai style!", emoji: "👣" },
     { text: "Soch samajh ke likh bhai, code ek baar likhna hota hai!", emoji: "🧠" },
-    { text: "Code toh poetry hai re, aur Brijesh bhai toh asli shayar!", emoji: "📝" },
-    { text: "Bug kya hota hai? Brijesh bhai usko feature bana deta hai!", emoji: "🦋" },
-    { text: "Code tez nahi, smart likh bhai! Brijesh bhai bolta hai!", emoji: "💪" },
-    { text: "Jo code nahi likha, wahi best hota hai — Brijesh bhai ka rule!", emoji: "🎨" },
-    { text: "Debugging bhi art hai, aur Brijesh bhai artist!", emoji: "🎭" },
-    { text: "Confidence se code likh, testing Brijesh bhai sambhalega!", emoji: "🛡️" },
-    { text: "Ek line ka code bhi game badal deta hai — Brijesh bhai proof hai!", emoji: "💫" },
-    { text: "Code matlab naye ideas ka magic — Brijesh bhai jaisa coder chahiye!", emoji: "🌐" },
-    { text: "Har function ek kahani hai — Brijesh bhai ki likhi hui!", emoji: "📚" },
-    { text: "Dil se code karo, Brijesh bhai jaisa build karo!", emoji: "🔥" },
-    { text: "Happy developer = solid code. Brijesh bhai example hai!", emoji: "😊" },
-    { text: "Pyaar se likho code, sab bugs bhaag jaayenge re!", emoji: "❤️" },
-    { text: "Har commit ek kadam aage — Brijesh bhai ke jaisa progress!", emoji: "👣" },
-    { text: "Code idea ko reality banata hai — Brijesh bhai ka roz ka kaam!", emoji: "🌉" },
-    { text: "Programming ek journey hai, destination nahi — Brijesh bhai hamesha on road!", emoji: "🗺️" },
-    { text: "Code likhte waqt Brijesh bhai hamesha smile karta hai!", emoji: "😄" },
-    { text: "Possibility ka doosra naam code hai — Brijesh bhai ke liye!", emoji: "🎨" },
-    { text: "Har line mein Brijesh bhai ka dum chhupa hai!", emoji: "✨" },
-    { text: "Seedhe aur clean likho, Brijesh bhai style mein samajhne mein maza aata hai!", emoji: "🔮" },
-    { text: "Bhai, Brijesh bhai ka likha code toh ek novel jaise flow karta hai!", emoji: "📖" },
-    { text: "Programming? Brijesh bhai ke liye toh coffee ka dusra naam hai!", emoji: "☕" }
+    { text: "Code toh poetry hai re, aur Brijesh bhai toh asli shayar!", emoji: "📝" }
   ];
 
+  // Add programmerQuotes array
   const programmerQuotes = [
     { text: "Code agar samjhana pad gaya na bhai, toh joke hi samajh le usko!", emoji: "😅" },
     { text: "Pehle problem ka dahi karo, fir code ka tadka maaro!", emoji: "💡" },
@@ -564,14 +320,36 @@ export default function WeekdayTracker() {
     { text: "Soch zyada, likhna kam — asli programmer ka style!", emoji: "🧠" },
     { text: "Computer ki dikkat kya hai? Problem bana deta hai jahan problem hoti hi nahi!", emoji: "💭" },
     { text: "Code samjhe insaan, tabhi toh bole Brijesh bhai, 'yeh hai asli kaam!'", emoji: "👥" },
-    { text: "Tez kaam chahiye? Jaldi shuru kar bhai!", emoji: "⏰" },
-    { text: "Code likhne se zyada, padhe jaata hai — samjhdar coder ban bhai!", emoji: "📖" },
-    { text: "Best code? Jo likhna hi na pade!", emoji: "🎯" },
-    { text: "Programming matlab superpower — Brijesh bhai ka asli weapon!", emoji: "🦸‍♂️" },
-    { text: "Sikhna hai? Dusre ko sikha de, khud hi pro ban jayega!", emoji: "👨‍🏫" },
-    { text: "Code aur joke mein fark nahi — dono samjhane lage toh bekaar hai!", emoji: "😉" }
+    { text: "Tez kaam chahiye? Jaldi shuru kar bhai!", emoji: "⏰" }
   ];
 
+  // Update weekend mode based on current day
+  const updateWeekendMode = () => {
+    const today = new Date();
+    const day = today.getDay();
+    setIsWeekendMode(day === 0 || day === 6); // 0 is Sunday, 6 is Saturday
+  };
+
+  // Update weekend mode on mount and every minute
+  useEffect(() => {
+    updateWeekendMode();
+    const interval = setInterval(updateWeekendMode, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, []);
+
+  // Weekend messages
+  const weekendMessages = {
+    saturday: {
+      emoji: '🎉',
+      text: 'Weekend Mode: Saturday Vibes!',
+      subtext: 'Time to relax and enjoy your day!'
+    },
+    sunday: {
+      emoji: '🌟',
+      text: 'Weekend Mode: Sunday Special!',
+      subtext: 'Make the most of your last weekend day!'
+    }
+  };
 
   useEffect(() => {
     const quoteInterval = setInterval(() => {
@@ -841,8 +619,29 @@ export default function WeekdayTracker() {
       <AnimatedBackground />
       <div className="relative z-10">
         <div className="min-h-screen bg-transparent flex flex-col">
-          {/* Sticky Top Quote Section - Enhanced with better gradient and glow */}
-          <div className="sticky top-0 z-50 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 py-3 border-b border-blue-200/50 shadow-sm transition-all duration-300"
+          {/* Weekend Label */}
+          {isWeekendMode && (
+            <div className="sticky top-0 z-40 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 shadow-lg animate-bounce-subtle">
+              <div className="container mx-auto max-w-4xl">
+                <div className="flex items-center justify-center gap-3">
+                  <span className="text-3xl animate-bounce">
+                    {new Date().getDay() === 0 ? weekendMessages.sunday.emoji : weekendMessages.saturday.emoji}
+                  </span>
+                  <div className="text-center">
+                    <h2 className="text-xl font-bold">
+                      {new Date().getDay() === 0 ? weekendMessages.sunday.text : weekendMessages.saturday.text}
+                    </h2>
+                    <p className="text-sm opacity-90">
+                      {new Date().getDay() === 0 ? weekendMessages.sunday.subtext : weekendMessages.saturday.subtext}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Sticky Top Quote Section - Keep existing code */}
+          <div className={`sticky ${isWeekendMode ? 'top-20' : 'top-0'} z-40 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 py-3 border-b border-blue-200/50 shadow-sm transition-all duration-300`}
             style={{
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
@@ -852,10 +651,10 @@ export default function WeekdayTracker() {
               <div className="max-w-4xl mx-auto">
                 <div className="relative h-14 flex items-center justify-center">
                   <div className={`
-                    absolute inset-0 flex items-center justify-center
-                    transition-all duration-500
-                    ${isTopQuoteVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
-                  `}>
+                absolute inset-0 flex items-center justify-center
+                transition-all duration-500
+                ${isTopQuoteVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+              `}>
                     <div className="flex items-center gap-3 text-slate-700 bg-white/50 px-6 py-2 rounded-full shadow-sm">
                       <span className="text-2xl animate-bounce-subtle">
                         {topQuotes[currentTopQuote].emoji}
@@ -873,15 +672,15 @@ export default function WeekdayTracker() {
           {/* Add scroll event listener for shadow effect */}
           <script dangerouslySetInnerHTML={{
             __html: `
-              window.addEventListener('scroll', function() {
-                const quoteBar = document.querySelector('.sticky');
-                if (window.scrollY > 0) {
-                  quoteBar.classList.add('shadow-md');
-                } else {
-                  quoteBar.classList.remove('shadow-md');
-                }
-              });
-            `
+          window.addEventListener('scroll', function() {
+            const quoteBar = document.querySelector('.sticky');
+            if (window.scrollY > 0) {
+              quoteBar.classList.add('shadow-md');
+            } else {
+              quoteBar.classList.remove('shadow-md');
+            }
+          });
+        `
           }} />
 
           <div className="flex-grow">
@@ -1156,11 +955,11 @@ export default function WeekdayTracker() {
                             <div
                               key={idx}
                               className={`
-                                flex items-center justify-between p-3 rounded-lg
-                                ${isToday(date) ? 'bg-orange-100' : 'bg-white/80'}
-                                transform transition-all duration-300 hover:scale-[1.02]
-                                relative overflow-hidden
-                              `}
+                            flex items-center justify-between p-3 rounded-lg
+                            ${isToday(date) ? 'bg-orange-100' : 'bg-white/80'}
+                            transform transition-all duration-300 hover:scale-[1.02]
+                            relative overflow-hidden
+                          `}
                             >
                               <div className="flex items-center gap-3">
                                 <span className="text-xl sm:text-2xl">🌞</span>
@@ -1207,11 +1006,11 @@ export default function WeekdayTracker() {
                             <div
                               key={idx}
                               className={`
-                                flex items-center justify-between p-3 rounded-lg
-                                ${isToday(date) ? 'bg-blue-100' : 'bg-white/80'}
-                                transform transition-all duration-300 hover:scale-[1.02]
-                                relative overflow-hidden
-                              `}
+                            flex items-center justify-between p-3 rounded-lg
+                            ${isToday(date) ? 'bg-blue-100' : 'bg-white/80'}
+                            transform transition-all duration-300 hover:scale-[1.02]
+                            relative overflow-hidden
+                          `}
                             >
                               <div className="flex items-center gap-3">
                                 <span className="text-xl sm:text-2xl">🌙</span>
@@ -1439,7 +1238,7 @@ export default function WeekdayTracker() {
                             className={`
                               p-3 rounded-lg relative
                               ${!isSelectedMonth ? 'opacity-50' : ''}
-                              ${isWeekendDay
+                          ${isWeekendDay
                                 ? isPastDay
                                   ? 'bg-red-100/50'
                                   : 'bg-red-50 hover:bg-red-100/50'
@@ -1448,24 +1247,24 @@ export default function WeekdayTracker() {
                                   : 'bg-slate-50 hover:bg-slate-100/50'
                               }
                               ${isCurrentDay ? 'border-2 border-blue-500 bg-blue-50' : 'border border-transparent'}
-                              ${isPastDay ? 'opacity-75' : ''}
-                              transition-all duration-200
-                            `}
+                          ${isPastDay ? 'opacity-75' : ''}
+                          transition-all duration-200
+                        `}
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex-grow">
                                 <div className={`
-                                  font-medium
-                                  ${isWeekendDay ? 'text-red-600' : 'text-slate-700'}
-                                  ${isCurrentDay ? 'text-blue-600' : ''}
-                                  ${isPastDay ? 'line-through' : ''}
-                                `}>
+                              font-medium
+                              ${isWeekendDay ? 'text-red-600' : 'text-slate-700'}
+                              ${isCurrentDay ? 'text-blue-600' : ''}
+                              ${isPastDay ? 'line-through' : ''}
+                            `}>
                                   {format(day, "EEEE")}
                                 </div>
                                 <div className={`
-                                  text-sm
-                                  ${isPastDay ? 'text-slate-400' : 'text-slate-500'}
-                                `}>
+                              text-sm
+                              ${isPastDay ? 'text-slate-400' : 'text-slate-500'}
+                            `}>
                                   {format(day, "MMM d")}
                                 </div>
 
@@ -1495,9 +1294,9 @@ export default function WeekdayTracker() {
                                       ].map((item, index) => (
                                         <div key={index} className="relative">
                                           <div className={`
-                                            text-[10px] font-medium text-center
-                                            bg-gradient-to-br ${item.color} bg-clip-text text-transparent
-                                          `}>
+                                        text-[10px] font-medium text-center
+                                        bg-gradient-to-br ${item.color} bg-clip-text text-transparent
+                                      `}>
                                             {String(item.value).padStart(2, '0')}
                                           </div>
                                           <div className="text-[8px] text-center text-slate-500">
@@ -1610,10 +1409,10 @@ export default function WeekdayTracker() {
                 <div className="text-center mb-8">
                   <div className="relative h-24 sm:h-20 flex items-center justify-center">
                     <div className={`
-                      absolute inset-0 flex items-center justify-center
-                      transition-opacity duration-500
-                      ${isQuoteVisible ? 'opacity-100' : 'opacity-0'}
-                    `}>
+                  absolute inset-0 flex items-center justify-center
+                  transition-opacity duration-500
+                  ${isQuoteVisible ? 'opacity-100' : 'opacity-0'}
+                `}>
                       <div className="relative px-8 py-4 bg-gradient-to-r from-slate-800/50 to-slate-900/50 rounded-2xl backdrop-blur-sm border border-slate-700/50">
                         <div className="flex flex-col items-center gap-3">
                           <span className="text-2xl">{programmerQuotes[currentQuote].emoji}</span>
@@ -1690,13 +1489,13 @@ export default function WeekdayTracker() {
           <button
             onClick={scrollToTop}
             className={`
-              fixed bottom-6 right-6 p-3 rounded-full shadow-lg
-              bg-gradient-to-br from-blue-500 to-purple-500
-              text-white transform transition-all duration-300
-              hover:scale-110 hover:shadow-xl
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-              ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}
-            `}
+          fixed bottom-6 right-6 p-3 rounded-full shadow-lg
+          bg-gradient-to-br from-blue-500 to-purple-500
+          text-white transform transition-all duration-300
+          hover:scale-110 hover:shadow-xl
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+          ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}
+        `}
             aria-label="Scroll to top"
           >
             <svg
@@ -1715,210 +1514,210 @@ export default function WeekdayTracker() {
           </button>
 
           <style jsx>{`
-            @keyframes slideUp {
-              from {
-                opacity: 0;
-                transform: translateY(20px);
-              }
-              to {
-                opacity: 1;
-                transform: translateY(0);
-              }
-            }
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
 
-            @keyframes slideIn {
-              from {
-                opacity: 0;
-                transform: translateY(10px);
-              }
-              to {
-                opacity: 1;
-                transform: translateY(0);
-              }
-            }
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
 
-            @keyframes pulseSubtle {
-              0% { opacity: 1; transform: scale(1); }
-              50% { opacity: 0.8; transform: scale(1.02); }
-              100% { opacity: 1; transform: scale(1); }
-            }
+        @keyframes pulseSubtle {
+          0% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.02); }
+          100% { opacity: 1; transform: scale(1); }
+        }
 
-            @keyframes bounceSubtle {
-              0%, 100% { transform: translateY(0); }
-              50% { transform: translateY(-5px); }
-            }
+        @keyframes bounceSubtle {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+        }
 
-            @keyframes spinSlow {
-              from { transform: rotate(0deg); }
-              to { transform: rotate(360deg); }
-            }
+        @keyframes spinSlow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
 
-            .animate-slide-up {
-              animation: slideUp 0.5s ease-out forwards;
-            }
+        .animate-slide-up {
+          animation: slideUp 0.5s ease-out forwards;
+        }
 
-            .animate-slide-in {
-              animation: slideIn 0.3s ease-out forwards;
-            }
+        .animate-slide-in {
+          animation: slideIn 0.3s ease-out forwards;
+        }
 
-            .animate-pulse-subtle {
-              animation: pulseSubtle 1s infinite;
-            }
+        .animate-pulse-subtle {
+          animation: pulseSubtle 1s infinite;
+        }
 
-            .animate-bounce-subtle {
-              animation: bounceSubtle 2s infinite;
-            }
+        .animate-bounce-subtle {
+          animation: bounceSubtle 2s infinite;
+        }
 
-            .animate-spin-slow {
-              animation: spinSlow 8s linear infinite;
-            }
+        .animate-spin-slow {
+          animation: spinSlow 8s linear infinite;
+        }
 
-            .animate-fade-in {
-              animation: fadeIn 0.5s ease-out forwards;
-            }
+        .animate-fade-in {
+          animation: fadeIn 0.5s ease-out forwards;
+        }
 
-            @keyframes fadeIn {
-              from { opacity: 0; }
-              to { opacity: 1; }
-            }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
 
-            .custom-scrollbar {
-              -webkit-overflow-scrolling: touch;
-            }
+        .custom-scrollbar {
+          -webkit-overflow-scrolling: touch;
+        }
 
-            @media (max-width: 640px) {
-              .custom-scrollbar {
-                -webkit-overflow-scrolling: touch;
-                overscroll-behavior: contain;
-              }
-            }
+        @media (max-width: 640px) {
+          .custom-scrollbar {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+          }
+        }
 
-            @keyframes float {
-              0% { transform: translateY(0px); }
-              50% { transform: translateY(-5px); }
-              100% { transform: translateY(0px); }
-            }
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-5px); }
+          100% { transform: translateY(0px); }
+        }
 
-            button:hover svg {
-              animation: float 1s ease-in-out infinite;
-            }
+        button:hover svg {
+          animation: float 1s ease-in-out infinite;
+        }
 
-            .quote-transition {
-              transition: opacity 0.5s ease-in-out;
-            }
+        .quote-transition {
+          transition: opacity 0.5s ease-in-out;
+        }
 
-            @keyframes progressPulse {
-              0% { opacity: 1; }
-              50% { opacity: 0.7; }
-              100% { opacity: 1; }
-            }
+        @keyframes progressPulse {
+          0% { opacity: 1; }
+          50% { opacity: 0.7; }
+          100% { opacity: 1; }
+        }
 
-            .progress-bar {
-              animation: progressPulse 2s infinite;
-            }
+        .progress-bar {
+          animation: progressPulse 2s infinite;
+        }
 
-            @keyframes wave {
-              0% {
-                transform: translateX(-100%);
-              }
-              100% {
-                transform: translateX(100%);
-              }
-            }
+        @keyframes wave {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
 
-            @keyframes shine {
-              0% {
-                background-position: -100% 0;
-              }
-              100% {
-                background-position: 200% 0;
-              }
-            }
+        @keyframes shine {
+          0% {
+            background-position: -100% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
+        }
 
-            .wave-animation {
-              will-change: transform;
-            }
+        .wave-animation {
+          will-change: transform;
+        }
 
-            .shine-animation {
-              background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.2),
-                transparent
-              );
-              background-size: 200% 100%;
-              animation: shine 3s linear infinite;
-              will-change: background-position;
-            }
+        .shine-animation {
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+          );
+          background-size: 200% 100%;
+          animation: shine 3s linear infinite;
+          will-change: background-position;
+        }
 
-            /* Add a subtle pulse to the progress bar container */
-            .progress-container {
-              animation: containerPulse 2s ease-in-out infinite;
-            }
+        /* Add a subtle pulse to the progress bar container */
+        .progress-container {
+          animation: containerPulse 2s ease-in-out infinite;
+        }
 
-            @keyframes containerPulse {
-              0%, 100% {
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.1);
-              }
-              50% {
-                box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-              }
-            }
+        @keyframes containerPulse {
+          0%, 100% {
+            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.1);
+          }
+          50% {
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+          }
+        }
 
-            /* Custom scrollbar for the labels container */
-            .overflow-x-auto {
-              scrollbar-width: thin;
-              scrollbar-color: rgba(203, 213, 225, 0.5) transparent;
-            }
+        /* Custom scrollbar for the labels container */
+        .overflow-x-auto {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(203, 213, 225, 0.5) transparent;
+        }
 
-            .overflow-x-auto::-webkit-scrollbar {
-              height: 4px;
-            }
+        .overflow-x-auto::-webkit-scrollbar {
+          height: 4px;
+        }
 
-            .overflow-x-auto::-webkit-scrollbar-track {
-              background: transparent;
-            }
+        .overflow-x-auto::-webkit-scrollbar-track {
+          background: transparent;
+        }
 
-            .overflow-x-auto::-webkit-scrollbar-thumb {
-              background-color: rgba(203, 213, 225, 0.5);
-              border-radius: 20px;
-            }
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+          background-color: rgba(203, 213, 225, 0.5);
+          border-radius: 20px;
+        }
 
-            .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-              background-color: rgba(203, 213, 225, 0.7);
-            }
+        .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+          background-color: rgba(203, 213, 225, 0.7);
+        }
 
-            /* Add a subtle gradient fade on the sides */
-            .overflow-x-auto::after {
-              content: '';
-              position: absolute;
-              right: 0;
-              top: 0;
-              bottom: 0;
-              width: 20px;
-              background: linear-gradient(to right, transparent, white);
-              pointer-events: none;
-            }
+        /* Add a subtle gradient fade on the sides */
+        .overflow-x-auto::after {
+          content: '';
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          width: 20px;
+          background: linear-gradient(to right, transparent, white);
+          pointer-events: none;
+        }
 
-            .overflow-x-auto::before {
-              content: '';
-              position: absolute;
-              left: 0;
-              top: 0;
-              bottom: 0;
-              width: 20px;
-              background: linear-gradient(to left, transparent, white);
-              pointer-events: none;
-            }
+        .overflow-x-auto::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 20px;
+          background: linear-gradient(to left, transparent, white);
+          pointer-events: none;
+        }
 
-            /* Ensure smooth scrolling on mobile */
-            @media (max-width: 640px) {
-              .overflow-x-auto {
-                -webkit-overflow-scrolling: touch;
-                scroll-behavior: smooth;
-                overscroll-behavior-x: contain;
-              }
-            }
+        /* Ensure smooth scrolling on mobile */
+        @media (max-width: 640px) {
+          .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            overscroll-behavior-x: contain;
+          }
+        }
 
             @keyframes blob {
               0% {
@@ -1965,7 +1764,23 @@ export default function WeekdayTracker() {
             .hover\:shadow-xl:hover {
               box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05);
             }
-          `}</style>
+
+            .animate-bounce-subtle {
+              animation: bounce-subtle 2s infinite;
+            }
+            @keyframes bounce-subtle {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-3px); }
+            }
+
+            .animate-bounce {
+              animation: bounce 1s infinite;
+            }
+            @keyframes bounce {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-5px); }
+            }
+      `}</style>
         </div>
       </div>
     </div>
